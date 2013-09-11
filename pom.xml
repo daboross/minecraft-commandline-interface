@@ -3,12 +3,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.daboross</groupId>
-    <artifactId>MinecraftTesting</artifactId>
+    <artifactId>minecraft-commandline-interface</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>MinecraftTesting</name>
-    <url>https://github.com/daboross/MinecraftTesting</url>
+    <name>MinecraftCommandlineInterface</name>
+    <url>https://github.com/daboross/minecraft-commandline-interface</url>
     <inceptionYear>2013</inceptionYear>
     <licenses>
         <license>
@@ -27,9 +27,9 @@
     </developers>
 
     <scm>
-        <url>https://github.com/daboross/MinecraftTesting</url>
-        <connection>scm:git:https://github.com/daboross/MinecraftTesting.git</connection>
-        <developerConnection>scm:git:git@github.com:daboross/MinecraftTesting.git</developerConnection>
+        <url>https://github.com/daboross/minecraft-commandline-interface</url>
+        <connection>scm:git:https://github.com/daboross/minecraft-commandline-interface.git</connection>
+        <developerConnection>scm:git:git@github.com:daboross/minecraft-commandline-interface.git</developerConnection>
     </scm>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>net.theunnameddude</groupId>
-            <artifactId>MCProtocolFramework</artifactId>
+            <artifactId>mc-protocol-framework</artifactId>
             <version>1.0-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
@@ -103,7 +103,7 @@
                         <configuration>
                             <artifactSet>
                                 <includes>
-                                    <include>net.theunnameddude:MCProtocolFramework</include>
+                                    <include>net.theunnameddude:mc-protocol-framework</include>
                                     <include>jline:jline</include>
                                 </includes>
                             </artifactSet>
@@ -114,7 +114,7 @@
         </plugins>
     </build>
     <issueManagement>
-        <url>https://github.com/daboross/MinecraftTesting.git</url>
+        <url>https://github.com/daboross/minecraft-commandline-interface.git</url>
         <system>Github Issues</system>
     </issueManagement>
 </project>
