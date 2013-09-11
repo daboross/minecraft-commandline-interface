@@ -10,6 +10,7 @@ import net.daboross.minecrafttesting.commands.ConnectOfflineMode;
 import net.daboross.minecrafttesting.commands.ConnectOnlineMode;
 import net.daboross.minecrafttesting.commands.EndCommand;
 import net.daboross.minecrafttesting.commands.HelpCommand;
+import net.daboross.minecrafttesting.commands.LocalHostAlias;
 import net.daboross.minecrafttesting.log.SubLogger;
 
 /**
@@ -31,6 +32,7 @@ public class Main implements GlobalClient {
         commands.addCommand(new EndCommand());
         commands.addCommand(new ConnectOnlineMode());
         commands.addCommand(new ConnectOfflineMode());
+        commands.addCommand(new LocalHostAlias());
     }
 
     public void start() {

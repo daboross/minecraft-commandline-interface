@@ -17,6 +17,7 @@
 package net.daboross.minecrafttesting.input;
 
 import java.io.IOException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import jline.console.ConsoleReader;
 import net.daboross.minecrafttesting.command.CommandHandler;
@@ -50,6 +51,10 @@ public class InputHandlerThread extends Thread {
             while (!isInterrupted()) {
                 String line = console.readLine("> ");
                 if (line != null) {
+                    if (line.trim().isEmpty()) {
+                        logger.log(Level.INFO, "{0}\\n isn''t a command", ChatColor.DARK_RED);
+                        continue;
+                    }
                     line = ChatColor.translateAlternateColorCodes('&', line);
                     String[] args = line.split(" ");
                     commandHandler.dispatchCommand(consoleSender, args[0], ArrayUtils.sub(args));

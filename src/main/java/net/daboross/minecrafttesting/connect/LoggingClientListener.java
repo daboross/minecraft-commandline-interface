@@ -40,11 +40,6 @@ public class LoggingClientListener extends ClientListener {
     }
 
     @Override
-    public void onPing() {
-        logger.log(Level.INFO, "Ping!");
-    }
-
-    @Override
     public void onDisconnect() {
         logger.log(Level.INFO, "Disconnecting");
     }

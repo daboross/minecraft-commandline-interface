@@ -56,7 +56,10 @@ public abstract class Command {
     }
 
     public void sendHelpText(Sender sender) {
-        sender.sendMessage(ChatColor.AQUA + "/" + ArrayUtils.join(aliases, ChatColor.GRAY + "|" + ChatColor.AQUA) + ((helpArgs == null || helpArgs.length == 0) ? "" : ChatColor.GRAY + " <" + ChatColor.GOLD + ArrayUtils.join(helpArgs, ChatColor.GRAY + "> <" + ChatColor.GOLD) + ChatColor.GRAY + ">") + ChatColor.WHITE + " - " + ChatColor.GREEN + getHelpText());
+        sender.sendMessage(ChatColor.AQUA + ArrayUtils.join(aliases, ChatColor.GRAY + " | " + ChatColor.AQUA)
+                + ((helpArgs == null || helpArgs.length == 0) ? "" : ChatColor.GRAY + " <" + ChatColor.GOLD
+                + ArrayUtils.join(helpArgs, ChatColor.GRAY + "> <" + ChatColor.GOLD) + ChatColor.GRAY + ">")
+                + ChatColor.WHITE + " - " + ChatColor.GREEN + getHelpText());
     }
 
     public abstract void run(Sender sender, String commandLabel, String[] args);
