@@ -54,7 +54,7 @@ public class Main implements MinecraftInterface {
     }
 
     public void start() {
-        logger.log(Level.INFO, "Starting Minecraft CommandLine Interface version {0}", getVersion());
+        logger.log(Level.INFO, "Starting version {0}", getVersion());
         commands.addCommand(new HelpCommand(commands));
         commands.addCommand(new EndCommand(this));
         commands.addCommand(new ConnectOnlineMode(this));
@@ -66,7 +66,7 @@ public class Main implements MinecraftInterface {
 
     private String getVersion() {
         String version = Main.class.getPackage().getImplementationVersion();
-        return version == null ? "WatWatWat" : version;
+        return version == null ? "mc-cli-Unknown" : version;
     }
 
     @Override
