@@ -1,0 +1,5 @@
+#!/bin/bash
+# Assuming jar is in .bin
+jarFile="$HOME/.bin/MinecraftTesting.jar"
+# Start
+java -Xmx512m -Xincgc -jar "$jarFile"
