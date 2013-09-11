@@ -33,6 +33,17 @@ public class ArrayUtils {
         return build.toString();
     }
 
+    public static String join(Object[] objects, int start, String seperator) {
+        if (objects == null || objects.length <= start) {
+            return "";
+        }
+        StringBuilder build = new StringBuilder(String.valueOf(objects[start]));
+        for (int i = start + 1; i < objects.length; i++) {
+            build.append(seperator).append(objects[i]);
+        }
+        return build.toString();
+    }
+
     public static String join(Object[] objects) {
         return join(objects, " ");
     }

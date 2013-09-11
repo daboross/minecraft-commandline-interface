@@ -18,6 +18,7 @@ package net.daboross.minecrafttesting.commands;
 
 import java.util.logging.Level;
 import net.daboross.minecrafttesting.api.StaticClient;
+import net.daboross.minecrafttesting.clients.CurrentlyRunningClientsMap;
 import net.daboross.minecrafttesting.command.Command;
 import net.daboross.minecrafttesting.command.Sender;
 import net.daboross.minecrafttesting.connect.LoggingClientListener;
@@ -32,13 +33,13 @@ import org.json.JSONObject;
  * @author Dabo Ross <http://www.daboross.net/>
  */
 public class LocalHostAlias extends Command {
-
+    
     public LocalHostAlias() {
         super("localhost", "lh");
         setHelpText("Connects to the offline server localhost:25565");
         setHelpArgs("Username");
     }
-
+    
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
         if (args.length != 1) {
@@ -57,5 +58,6 @@ public class LocalHostAlias extends Command {
         }
         MinecraftClient client = MinecraftClientConnector.connect(host, port, auth);
         client.addListener(new LoggingClientListener(StaticClient.getSubLogger("lh").getSubLogger(username)));
+        CurrentlyRunningClientsMap.getInstance().addClient(client, host + ":" + port + ":" + username);
     }
 }

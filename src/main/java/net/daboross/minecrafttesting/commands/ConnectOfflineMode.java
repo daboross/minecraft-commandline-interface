@@ -18,6 +18,7 @@ package net.daboross.minecrafttesting.commands;
 
 import java.util.logging.Level;
 import net.daboross.minecrafttesting.api.StaticClient;
+import net.daboross.minecrafttesting.clients.CurrentlyRunningClientsMap;
 import net.daboross.minecrafttesting.command.Command;
 import net.daboross.minecrafttesting.command.Sender;
 import net.daboross.minecrafttesting.connect.LoggingClientListener;
@@ -58,12 +59,15 @@ public class ConnectOfflineMode extends Command {
         String username = args[2];
         AuthenticationResponse auth;
         try {
-            auth = new AuthenticationResponse(new JSONObject().put("accessToken", "").put("clientToken", "").put("selectedProfile", new JSONObject().put("id", "0").put("name", username)));
+            auth = new AuthenticationResponse(new JSONObject()
+                    .put("accessToken", "asdfdsa").put("clientToken", "asdffdsa")
+                    .put("selectedProfile", new JSONObject().put("id", "0").put("name", username)));
         } catch (JSONException ex) {
             StaticClient.getLogger().log(Level.SEVERE, "Failed to make AuthenticationResponse", ex);
             return;
         }
         MinecraftClient client = MinecraftClientConnector.connect(host, portInt, auth);
         client.addListener(new LoggingClientListener(StaticClient.getSubLogger(host + ":" + port).getSubLogger(username)));
+        CurrentlyRunningClientsMap.getInstance().addClient(client, host + ":" + port + ":" + username);
     }
 }

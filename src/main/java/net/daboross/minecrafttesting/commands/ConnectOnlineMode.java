@@ -18,6 +18,7 @@ package net.daboross.minecrafttesting.commands;
 
 import java.util.logging.Level;
 import net.daboross.minecrafttesting.api.StaticClient;
+import net.daboross.minecrafttesting.clients.CurrentlyRunningClientsMap;
 import net.daboross.minecrafttesting.command.Command;
 import net.daboross.minecrafttesting.command.Sender;
 import net.daboross.minecrafttesting.connect.LoggingClientListener;
@@ -64,5 +65,6 @@ public class ConnectOnlineMode extends Command {
         }
         MinecraftClient client = MinecraftClientConnector.connect(host, portInt, auth);
         client.addListener(new LoggingClientListener(StaticClient.getSubLogger(host + ":" + port).getSubLogger(username)));
+        CurrentlyRunningClientsMap.getInstance().addClient(client, host + ":" + port + ":" + username);
     }
 }

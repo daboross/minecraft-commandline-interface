@@ -46,6 +46,10 @@ public class StaticClient {
         }
     }
 
+    public static GlobalClient getClient() {
+        return client;
+    }
+
     public static void stop() {
         if (client != null) {
             client.stop();
