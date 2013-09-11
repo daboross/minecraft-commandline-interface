@@ -17,13 +17,13 @@
 package net.daboross.minecrafttesting.command;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
+import net.daboross.minecrafttesting.api.StaticClient;
 import net.daboross.minecrafttesting.log.ChatColor;
-import net.daboross.minecrafttesting.utils.ArrayUtils;
 
 /**
  *
@@ -34,11 +34,6 @@ public class CommandHandler {
     private final Map<String, Command> aliasMap = new HashMap<>();
     private final List<Command> commands = new ArrayList<>();
 
-    @SuppressWarnings("OverridableMethodCallInConstructor")
-    public CommandHandler() {
-        addCommand(new HelpCommand());
-    }
-
     public void addCommand(Command command) {
         for (String alias : command.aliases) {
             aliasMap.put(alias, command);
@@ -46,40 +41,24 @@ public class CommandHandler {
         commands.add(command);
     }
 
-    public void actOn(Sender sender, String string) {
-        String[] commandAndArgs = string.split(" ");
-        String alias = commandAndArgs[0];
-        Command command = aliasMap.get(alias);
-        if (command != null) {
-            String[] commandArgs = ArrayUtils.sub(commandAndArgs);
-            command.run(sender, alias, commandArgs);
-        } else {
-            sender.sendMessage(Level.WARNING, ChatColor.DARK_RED + "Command " + ChatColor.GREEN + alias + ChatColor.DARK_RED + " not found.");
+    public void dispatchCommand(Sender sender, String label, String... args) {
+        try {
+            Command command = aliasMap.get(label);
+            if (command != null) {
+                command.run(sender, label, args);
+            } else {
+                sender.sendMessage(Level.WARNING, ChatColor.DARK_RED + "Command " + ChatColor.GREEN + label + ChatColor.DARK_RED + " not found.");
+            }
+        } catch (Throwable t) {
+            StaticClient.getLogger().log(Level.WARNING, "Failed to execute command " + label + "", t);
         }
     }
 
-    public class HelpCommand extends Command {
+    public List<Command> getCommands() {
+        return Collections.unmodifiableList(commands);
+    }
 
-        public HelpCommand() {
-            super("?", "help");
-            setHelpText("Displays this help");
-        }
-
-        @Override
-        public void run(Sender sender, String commandLabel, String[] args) {
-            if (args.length > 0) {
-                String argsString = ArrayUtils.join(args);
-                for (Command command : commands) {
-                    if (ArrayUtils.join(command.aliases).contains(argsString)) {
-                        command.sendHelpText(sender);
-                    }
-                }
-            } else {
-                for (Command command : commands) {
-                    command.sendHelpText(sender);
-                }
-            }
-        }
-
+    public Command getCommand(String alias) {
+        return aliasMap.get(alias);
     }
 }

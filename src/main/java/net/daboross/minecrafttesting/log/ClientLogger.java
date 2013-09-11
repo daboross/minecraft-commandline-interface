@@ -8,18 +8,17 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import jline.console.ConsoleReader;
 
-public class MCLogger extends Logger {
+public class ClientLogger extends Logger {
 
     private final ColouredWriter writer;
     private final Formatter formatter = new ConciseFormatter();
     private final LogDispatcher dispatcher = new LogDispatcher(this);
 
-    public MCLogger(ConsoleReader consoleReader) {
-        super("MinecraftClient", null);
+    public ClientLogger(ConsoleReader consoleReader) {
+        super("Client", null);
         this.writer = new ColouredWriter(consoleReader);
-
         try {
-            FileHandler handler = new FileHandler(System.getProperty("user.home") + File.separatorChar + ".minecraft.log", 1 << 24, 8, true);
+            FileHandler handler = new FileHandler(System.getProperty("user.home") + File.separatorChar + "minecraft-client.log", 1 << 24, 8, true);
             handler.setFormatter(formatter);
             addHandler(handler);
         } catch (IOException ex) {

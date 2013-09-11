@@ -16,6 +16,7 @@
  */
 package net.daboross.minecrafttesting.command;
 
+import java.util.Arrays;
 import net.daboross.minecrafttesting.log.ChatColor;
 import net.daboross.minecrafttesting.utils.ArrayUtils;
 
@@ -31,6 +32,7 @@ public abstract class Command {
 
     public Command(String... aliases) {
         this.aliases = aliases;
+        Arrays.sort(aliases);
     }
 
     public void setHelpText(String helpText) {
@@ -49,8 +51,12 @@ public abstract class Command {
         return helpArgs;
     }
 
+    public boolean doesMatch(String alias) {
+        return Arrays.binarySearch(aliases, alias) > 0;
+    }
+
     public void sendHelpText(Sender sender) {
-        sender.sendMessage(ChatColor.AQUA + "/" + ArrayUtils.join(aliases, ChatColor.GRAY + "|" + ChatColor.AQUA) + ChatColor.GRAY + "<" + ChatColor.GOLD + ArrayUtils.join(helpArgs, ChatColor.GRAY + "> <" + ChatColor.GOLD) + ChatColor.GRAY + ">" + ChatColor.WHITE + " - " + ChatColor.GREEN + getHelpText());
+        sender.sendMessage(ChatColor.AQUA + "/" + ArrayUtils.join(aliases, ChatColor.GRAY + "|" + ChatColor.AQUA) + ((helpArgs == null || helpArgs.length == 0) ? "" : ChatColor.GRAY + " <" + ChatColor.GOLD + ArrayUtils.join(helpArgs, ChatColor.GRAY + "> <" + ChatColor.GOLD) + ChatColor.GRAY + ">") + ChatColor.WHITE + " - " + ChatColor.GREEN + getHelpText());
     }
 
     public abstract void run(Sender sender, String commandLabel, String[] args);

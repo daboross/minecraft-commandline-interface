@@ -24,35 +24,28 @@ import jline.UnsupportedTerminal;
 import jline.console.ConsoleReader;
 import jline.internal.Log;
 import net.daboross.minecrafttesting.command.CommandHandler;
-import net.daboross.minecrafttesting.command.Sender;
-import org.fusesource.jansi.AnsiConsole;
+import net.daboross.minecrafttesting.input.InputHandlerThread;
 
 /**
  *
  * @author Dabo Ross <http://www.daboross.net/>
  */
-public class MCInputOutput {
+public class MCOutput {
 
-    private boolean running;
     private ConsoleReader consoleReader;
-    private final ConsoleSender sender;
-    private MCLogger logger;
-    private final CommandHandler commands;
+    private ClientLogger logger;
+    private Thread inputThread;
 
-    public MCInputOutput(CommandHandler commands) {
-        AnsiConsole.systemInstall();
+    public MCOutput() {
         try {
             consoleReader = new ConsoleReader();
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        logger = new MCLogger(consoleReader);
-        this.sender = new ConsoleSender();
-        this.commands = commands;
+        logger = new ClientLogger(consoleReader);
     }
 
-    public void start() {
-        running = true;
+    public void start(CommandHandler commandHandler) {
         Log.setOutput(new PrintStream(new OutputStream() {
             @Override
             public void write(int b) {
@@ -61,52 +54,20 @@ public class MCInputOutput {
         logger.startDispatcher();
         System.setErr(new PrintStream(new LoggingOutputStream(logger, Level.SEVERE), true));
         System.setOut(new PrintStream(new LoggingOutputStream(logger, Level.INFO), true));
-
         if (consoleReader.getTerminal() instanceof UnsupportedTerminal) {
-            logger.info("Unable to initialize fancy terminal.");
+            logger.info("Unable to initialize jline.");
         }
-        new Thread(new InputRunnable()).start();
+        inputThread = new InputHandlerThread(logger, commandHandler, consoleReader);
+        inputThread.start();
     }
 
-    public MCLogger getLogger() {
+    public ClientLogger getLogger() {
         return logger;
     }
 
     public void end() {
-        running = false;
-    }
-
-    private class ConsoleSender implements Sender {
-
-        @Override
-        public void sendMessage(String message) {
-            sendMessage(Level.INFO, message);
-        }
-
-        @Override
-        public void sendMessage(Level level, String message) {
-            logger.log(level == null ? Level.INFO : level, message);
-        }
-    }
-
-    private class InputRunnable extends Thread {
-
-        public InputRunnable() {
-            super("Input Thread");
-        }
-
-        @Override
-        public void run() {
-            try {
-                logger.info("Starting input");
-                while (running && !isInterrupted()) {
-                    String line = consoleReader.readLine("> ");
-                    if (line != null) {
-                        commands.actOn(sender, ChatColor.translateAlternateColorCodes('&', line));
-                    }
-                }
-            } catch (IOException ex) {
-            }
+        if (inputThread != null) {
+            inputThread.interrupt();
         }
     }
 }

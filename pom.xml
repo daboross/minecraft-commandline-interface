@@ -85,7 +85,7 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>net.daboross.minecrafttesting.MinecraftTestingMain</Main-Class>
+                            <Main-Class>net.daboross.minecrafttesting.Main</Main-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

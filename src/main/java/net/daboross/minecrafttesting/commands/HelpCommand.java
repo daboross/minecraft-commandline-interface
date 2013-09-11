@@ -17,34 +17,37 @@
 package net.daboross.minecrafttesting.commands;
 
 import net.daboross.minecrafttesting.command.Command;
+import net.daboross.minecrafttesting.command.CommandHandler;
 import net.daboross.minecrafttesting.command.Sender;
-import net.theunnameddude.mcclient.api.MinecraftClient;
-import net.theunnameddude.mcclient.api.MinecraftClientConnector;
-import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
-import net.theunnameddude.mcclient.api.auth.Authenticator;
+import net.daboross.minecrafttesting.utils.ArrayUtils;
 
 /**
  *
  * @author Dabo Ross <http://www.daboross.net/>
  */
-public class SetUsernamePassword extends Command {
+public class HelpCommand extends Command {
 
-    public SetUsernamePassword() {
-        super("connect");
-        setHelpText("Connect to a server");
-        setHelpArgs("Server", "Port", "Username", "Password");
+    private final CommandHandler commandHandler;
+
+    public HelpCommand(CommandHandler commandHandler) {
+        super("?", "help");
+        setHelpText("Displays this help");
+        this.commandHandler = commandHandler;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length < 4) {
-            sendHelpText(sender);
+        if (args.length > 0) {
+            String argsString = ArrayUtils.join(args);
+            for (Command command : commandHandler.getCommands()) {
+                if (command.doesMatch(argsString)) {
+                    command.sendHelpText(sender);
+                }
+            }
+        } else {
+            for (Command command : commandHandler.getCommands()) {
+                command.sendHelpText(sender);
+            }
         }
-        String server = args[0];
-        String port = args[1];
-        String username = args[2];
-        String password = args[3];
-        AuthenticationResponse auth = Authenticator.sendRequest(username, password);
-        MinecraftClient client = MinecraftClientConnector.connect(server, 25565, auth);
     }
 }

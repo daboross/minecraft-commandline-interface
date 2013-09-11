@@ -6,10 +6,10 @@ import java.util.logging.LogRecord;
 
 public class LogDispatcher extends Thread {
 
-    private final MCLogger logger;
+    private final ClientLogger logger;
     private final BlockingQueue<LogRecord> queue = new LinkedBlockingQueue<>();
 
-    public LogDispatcher(MCLogger logger) {
+    public LogDispatcher(ClientLogger logger) {
         super("Logging Thread");
         this.logger = logger;
     }
