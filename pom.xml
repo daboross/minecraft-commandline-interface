@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>net.daboross</groupId>
-    <artifactId>minecraft-commandline-interface</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <artifactId>mc-cli</artifactId>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>MinecraftCommandlineInterface</name>
@@ -34,20 +34,21 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl3</netbeans.hint.license>
+        <project.frameworkversion>${project.dependencies[0].version}</project.frameworkversion>
     </properties>
 
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
-        </dependency>
         <dependency>
             <groupId>net.theunnameddude</groupId>
             <artifactId>mc-protocol-framework</artifactId>
             <version>1.1-SNAPSHOT</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>jline</groupId>
@@ -72,7 +73,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.0.2</version>
+                <version>2.5.1</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -85,7 +86,8 @@
                 <configuration>
                     <archive>
                         <manifestEntries>
-                            <Main-Class>net.daboross.minecrafttesting.Main</Main-Class>
+                            <Main-Class>net.daboross.mccli.Main</Main-Class>
+                            <Implementation-Version>${describe}</Implementation-Version>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -108,6 +110,23 @@
                                 </includes>
                             </artifactSet>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.lukegb.mojo</groupId>
+                <artifactId>gitdescribe-maven-plugin</artifactId>
+                <version>1.3</version>
+                <configuration>
+                    <outputPrefix>git-${project.artifactId}-${project.version}-</outputPrefix>
+                    <outputPostfix>-framework-${project.frameworkversion}</outputPostfix>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>gitdescribe</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
