@@ -34,14 +34,14 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl3</netbeans.hint.license>
-        <project.frameworkversion>${project.dependencies[0].version}</project.frameworkversion>
+        <project.frameworkversion>1.1.1</project.frameworkversion>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>net.theunnameddude</groupId>
             <artifactId>mc-protocol-framework</artifactId>
-            <version>1.1.1</version>
+            <version>${project.frameworkversion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -102,14 +102,6 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <artifactSet>
-                                <includes>
-                                    <include>net.theunnameddude:mc-protocol-framework</include>
-                                    <include>jline:jline</include>
-                                </includes>
-                            </artifactSet>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
