@@ -4,7 +4,7 @@
 
     <groupId>net.daboross</groupId>
     <artifactId>mc-cli</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>MinecraftCommandlineInterface</name>
