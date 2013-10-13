@@ -17,10 +17,12 @@
 package net.daboross.mccli.clients;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import net.theunnameddude.mcclient.api.ClientListener;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
@@ -53,6 +55,10 @@ public class CurrentlyRunningClientsMap {
             }
         }
         return list;
+    }
+
+    public Set<Map.Entry<MinecraftClient, String>> getAllClients() {
+        return Collections.unmodifiableSet(clients.entrySet());
     }
 
     private class ClientListenerRemover extends ClientListener {

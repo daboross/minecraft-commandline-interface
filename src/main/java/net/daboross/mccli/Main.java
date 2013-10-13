@@ -25,8 +25,10 @@ import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.commands.ConnectOfflineMode;
 import net.daboross.mccli.commands.ConnectOnlineMode;
+import net.daboross.mccli.commands.Disconnect;
 import net.daboross.mccli.commands.EndCommand;
 import net.daboross.mccli.commands.HelpCommand;
+import net.daboross.mccli.commands.ListConnected;
 import net.daboross.mccli.commands.LocalHostAlias;
 import net.daboross.mccli.commands.SendText;
 import net.daboross.mccli.log.SubLogger;
@@ -61,6 +63,8 @@ public class Main implements MinecraftInterface {
         commands.addCommand(new ConnectOfflineMode(this));
         commands.addCommand(new LocalHostAlias(this));
         commands.addCommand(new SendText(this));
+        commands.addCommand(new Disconnect(this));
+        commands.addCommand(new ListConnected(this));
         output.start(commands);
     }
 

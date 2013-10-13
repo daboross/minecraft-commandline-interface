@@ -16,40 +16,44 @@
  */
 package net.daboross.mccli.commands;
 
+import java.util.Iterator;
 import java.util.Map;
 import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
-import net.daboross.mccli.utils.ArrayUtils;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
 /**
  *
  * @author Dabo Ross <http://www.daboross.net/>
  */
-public class SendText extends Command {
+public class ListConnected extends Command {
 
     private final MinecraftInterface main;
 
-    public SendText(MinecraftInterface main) {
-        super("send");
-        setHelpArgs("Name regex", "message");
-        setHelpText("Sends a chat message using the specified client(s). Name regex is a regex that will be matched against 'host:username'");
+    public ListConnected(MinecraftInterface main) {
+        super("list");
+        setHelpArgs();
+        setHelpText("Lists all connected clients");
         this.main = main;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length < 2) {
+        if (args.length > 0) {
             sendHelpText(sender);
             return;
         }
-        String name = args[0];
-        String message = ArrayUtils.join(args, 1, " ");
-        for (Map.Entry<MinecraftClient, String> client : main.getClients().getClientsWith(name)) {
-            sender.sendMessage(ChatColor.GREEN + "Sending message to " + ChatColor.DARK_RED + client.getValue());
-            client.getKey().sendMessage(message);
+        Iterator<Map.Entry<MinecraftClient, String>> i = main.getClients().getAllClients().iterator();
+        if (i.hasNext()) {
+            StringBuilder builder = new StringBuilder(ChatColor.GREEN.toString()).append("Connected clients: ").append(ChatColor.DARK_RED).append(i.next().getValue());
+            for (; i.hasNext();) {
+                builder.append(ChatColor.GREEN).append(", ").append(ChatColor.DARK_RED).append(i.next().getValue());
+            }
+            sender.sendMessage(builder.toString());
+        } else {
+            sender.sendMessage(ChatColor.GREEN + "Connected clients:");
         }
     }
 }

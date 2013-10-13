@@ -34,6 +34,7 @@ public class InputHandlerThread extends Thread {
     private final CommandHandler commandHandler;
     private final ConsoleReader console;
     private final Sender consoleSender;
+    private final InputParser parser;
 
     public InputHandlerThread(Logger logger, CommandHandler commandHandler, ConsoleReader console) {
         super("Input Thread");
@@ -41,6 +42,7 @@ public class InputHandlerThread extends Thread {
         this.commandHandler = commandHandler;
         this.console = console;
         this.consoleSender = new ConsoleCommandSender(logger);
+        this.parser = new InputParser();
     }
 
     @Override
@@ -49,11 +51,12 @@ public class InputHandlerThread extends Thread {
             try {
                 String line = console.readLine("> ");
                 if (line != null) {
-                    if (line.trim().isEmpty()) {
+                    line = line.trim();
+                    if (line.isEmpty()) {
                         logger.log(Level.INFO, "{0}\\n isn''t a command", ChatColor.DARK_RED);
                         continue;
                     }
-                    line = ChatColor.translateAlternateColorCodes('&', line);
+                    line = parser.parse(line);
                     String[] args = line.split(" ");
                     commandHandler.dispatchCommand(consoleSender, args[0], ArrayUtils.sub(args));
                 }

@@ -28,28 +28,27 @@ import net.theunnameddude.mcclient.api.MinecraftClient;
  *
  * @author Dabo Ross <http://www.daboross.net/>
  */
-public class SendText extends Command {
+public class Disconnect extends Command {
 
     private final MinecraftInterface main;
 
-    public SendText(MinecraftInterface main) {
-        super("send");
-        setHelpArgs("Name regex", "message");
-        setHelpText("Sends a chat message using the specified client(s). Name regex is a regex that will be matched against 'host:username'");
+    public Disconnect(MinecraftInterface main) {
+        super("disconnect");
+        setHelpArgs("Name regex");
+        setHelpText("Disconnects the given client(s). Name regex is a regex that will be matched against 'host:username'");
         this.main = main;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length < 2) {
+        if (args.length < 1) {
             sendHelpText(sender);
             return;
         }
         String name = args[0];
-        String message = ArrayUtils.join(args, 1, " ");
         for (Map.Entry<MinecraftClient, String> client : main.getClients().getClientsWith(name)) {
-            sender.sendMessage(ChatColor.GREEN + "Sending message to " + ChatColor.DARK_RED + client.getValue());
-            client.getKey().sendMessage(message);
+            sender.sendMessage(ChatColor.GREEN + "Disconnecting " + ChatColor.DARK_RED + client.getValue());
+            client.getKey().shutdown();
         }
     }
 }
