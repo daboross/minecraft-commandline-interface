@@ -34,7 +34,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl3</netbeans.hint.license>
-        <project.frameworkversion>1.1.1</project.frameworkversion>
+        <project.frameworkversion>1.1.1-SNAPSHOT</project.frameworkversion>
     </properties>
 
     <repositories>
