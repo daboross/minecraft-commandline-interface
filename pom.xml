@@ -37,6 +37,12 @@
         <project.frameworkversion>1.1.1</project.frameworkversion>
     </properties>
 
+    <repositories>
+        <repository>
+            <id>repo-daboross-net</id>
+            <url>http://repo.daboross.net/</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>net.theunnameddude</groupId>
