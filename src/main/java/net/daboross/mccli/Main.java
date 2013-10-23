@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
 import net.daboross.mccli.command.Sender;
+import net.daboross.mccli.commands.ConnectMultipleOfflineMode;
 import net.daboross.mccli.commands.ConnectOfflineMode;
 import net.daboross.mccli.commands.ConnectOnlineMode;
 import net.daboross.mccli.commands.Disconnect;
@@ -65,6 +66,7 @@ public class Main implements MinecraftInterface {
         commands.addCommand(new SendText(this));
         commands.addCommand(new Disconnect(this));
         commands.addCommand(new ListConnected(this));
+        commands.addCommand(new ConnectMultipleOfflineMode(this));
         output.start(commands);
     }
 
