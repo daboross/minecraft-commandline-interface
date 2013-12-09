@@ -17,9 +17,8 @@
 package net.daboross.mccli.commands;
 
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
@@ -33,11 +32,13 @@ import net.daboross.mccli.connect.LoggingClientListener;
 import net.daboross.mccli.log.ChatColor;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
+import net.theunnameddude.mcclient.api.auth.Authenticator;
 import net.theunnameddude.mcclient.client.MinecraftClientImpl;
 import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
 import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
-import org.json.JSONStringer;
-import org.json.JSONWriter;
+import org.json.JSONArray;
+import org.json.JSONObject;
+import org.json.JSONTokener;
 
 public class ParseFileCommand extends Command {
 
@@ -68,67 +69,41 @@ public class ParseFileCommand extends Command {
             sendHelpText(sender);
             return;
         }
-        File f = new File(new File(System.getProperty("user.home")), "MCAccounts.txt");
+        File f = new File(new File(System.getProperty("user.home")), "save-accounts.json");
         sender.sendMessage("Reading from " + f.getAbsolutePath());
-        List<String> lines;
-        try {
-            lines = Files.readAllLines(f.toPath(), Charset.forName("UTF-8"));
+        JSONObject jsonObject;
+        try (FileReader reader = new FileReader(f)) {
+            jsonObject = new JSONObject(new JSONTokener(reader));
         } catch (IOException ex) {
-            main.getLogger().log(Level.SEVERE, "Failed to read all lines.", ex);
+            main.getLogger().log(Level.SEVERE, null, ex);
             return;
         }
-        accounts = Collections.synchronizedList(new ArrayList<MCLoginAccount>(lines.size() / 3));
-        sender.sendMessage("lines.size = " + lines.size());
-        int state = 0; // 0 = ID; 1 = username; 2 = pass; -1 = waiting.
-        MCLoginAccount next = new MCLoginAccount();
-        for (int i = 0; i < lines.size(); i++) {
-            String line = lines.get(i).trim();
-            if (line.isEmpty()) {
-                state = -1;
-            } else if (state == -1) {
-                if (i > lines.size() - 3) {
-                    break;
-                }
-                if (line.equals("id") && lines.get(i + 1).trim().equals("username")
-                        && lines.get(i + 2).trim().equals("password")) {
-                    state = 0;
-                    i += 2;
-                }
-            } else if (state == 0) {
-                next.id = line;
-                state = 1;
-            } else if (state == 1) {
-                next.username = line;
-                state = 2;
-            } else if (state == 2) {
-                next.password = line;
-                final MCLoginAccount thisNext = next;
-//                Runnable auth = new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        try {
-//                            thisNext.auth = Authenticator.sendRequest(thisNext.username, thisNext.password);
-//                        } catch (RuntimeException | IOException ignored) {
-//                            sender.sendMessage(String.format("INVALID: id: %s, user: %s, pass: %s", thisNext.id, thisNext.username, thisNext.password));
-//                            return;
-//                        }
-                sender.sendMessage(String.format("id: %s, user: %s, pass: %s", thisNext.id, thisNext.username, thisNext.password));
-                accounts.add(thisNext);
+        JSONArray jsonAccounts = jsonObject.getJSONArray("accounts");
+        accounts = Collections.synchronizedList(new ArrayList<MCLoginAccount>(jsonAccounts.length()));
+        for (int i = 0; i < jsonAccounts.length(); i++) {
+            JSONObject obj = jsonAccounts.getJSONObject(i);
+            final MCLoginAccount next = new MCLoginAccount();
+            next.username = obj.getString("username");
+            next.password = obj.getString("password");
+//            Runnable auth = new Runnable() {
+//                @Override
+//                public void run() {
+//                    try {
+//                        next.auth = Authenticator.sendRequest(next.username, next.password);
+//                    } catch (RuntimeException | IOException unused) {
+//                        sender.sendMessage(String.format("INVALID: user: %s, pass: %s", next.username, next.password));
+//                        return;
 //                    }
-//                };
-//                synchronized (nextToRun) {
-//                    nextToRun.add(auth);
-//                    nextToRun.notify();
+            sender.sendMessage(String.format("user: %s, pass: %s", next.username, next.password));
+            accounts.add(next);
 //                }
-                next = new MCLoginAccount();
-                state = 0;
-            }
+//            };
+//            synchronized (nextToRun) {
+//                nextToRun.add(auth);
+//                nextToRun.notify();
+//            }
         }
-        sender.sendMessage("Done");
-    }
-
-    public Command getSaveCommand() {
-        return new SaveParsed();
+        sender.sendMessage(String.format("Parsed %s accounts.", accounts.size()));
     }
 
     private class RunParseFile extends Command {
@@ -167,6 +142,14 @@ public class ParseFileCommand extends Command {
                     @Override
                     public void run() {
                         sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + account.username);
+                        if (account.auth == null) {
+                            try {
+                                account.auth = Authenticator.sendRequest(account.username, account.password);
+                            } catch (RuntimeException | IOException unused) {
+                                sender.sendMessage(String.format("INVALID: user: %s, pass: %s", account.username, account.password));
+                                return;
+                            }
+                        }
                         client.connect(host, port, account.auth, use1_6_4 ? new PacketConstructor1_6_4() : new PacketConstructor1_7_2());
                     }
                 };
@@ -178,40 +161,8 @@ public class ParseFileCommand extends Command {
         }
     }
 
-    private class SaveParsed extends Command {
-
-        public SaveParsed() {
-            super("save-parsed");
-            setHelpText("Save");
-        }
-
-        @Override
-        public void run(final Sender sender, String commandLabel, String[] args) {
-            if (args.length != 0) {
-                sendHelpText(sender);
-                return;
-            }
-            JSONWriter w = new JSONStringer().object().key("accounts").array();
-            for (final MCLoginAccount account : accounts) {
-                w.object()
-                        .key("username").value(account.username)
-                        .key("password").value(account.password)
-                        .endObject();
-            }
-            sender.sendMessage(w.endArray().endObject().toString());
-            List<CharSequence> l = new ArrayList<>();
-            l.add(w.toString());
-            try {
-                Files.write(new File(new File(System.getProperty("user.home")), "save-accounts.json").toPath(), l, Charset.forName("UTF-8"));
-            } catch (IOException ex) {
-                main.getLogger().log(Level.SEVERE, null, ex);
-            }
-        }
-    }
-
     private class MCLoginAccount {
 
-        private String id;
         private String username;
         private String password;
         private AuthenticationResponse auth;

@@ -69,7 +69,6 @@ public class Main implements MinecraftInterface {
         pfcmd.prepareThreads();
         commands.addCommand(pfcmd);
         commands.addCommand(pfcmd.getRunCommand());
-        commands.addCommand(pfcmd.getSaveCommand());
         output.start(commands);
     }
 
@@ -83,6 +82,7 @@ public class Main implements MinecraftInterface {
         return logger;
     }
 
+    @Override
     public InputHandlerThread getInput() {
         return input;
     }
