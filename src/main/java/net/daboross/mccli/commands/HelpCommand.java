@@ -21,10 +21,6 @@ import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.utils.ArrayUtils;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class HelpCommand extends Command {
 
     private final CommandHandler commandHandler;

@@ -24,10 +24,6 @@ import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ListConnected extends Command {
 
     private final MinecraftInterface main;

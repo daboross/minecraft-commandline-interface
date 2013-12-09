@@ -21,16 +21,12 @@ import java.util.logging.Logger;
 import net.theunnameddude.mcclient.api.ClientListener;
 import net.theunnameddude.mcclient.api.ProtocolStatus;
 import net.theunnameddude.mcclient.client.ServerInfo;
-import net.theunnameddude.mcclient.protocol.packets.Packet09Respawn;
-import net.theunnameddude.mcclient.protocol.packets.PacketD1Team;
-import net.theunnameddude.mcclient.protocol.packets.PacketFAPluginMessage;
+import net.theunnameddude.mcclient.protocol.base.PacketPluginMessageBase;
+import net.theunnameddude.mcclient.protocol.base.PacketRespawnBase;
+import net.theunnameddude.mcclient.protocol.base.PacketTeamBase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class LoggingClientListener extends ClientListener {
 
     private final Logger logger;
@@ -60,7 +56,7 @@ public class LoggingClientListener extends ClientListener {
     }
 
     @Override
-    public void onTeamPacket(PacketD1Team packet) {
+    public void onTeamPacket(PacketTeamBase packet) {
         logger.log(Level.INFO, "Team packet {0}", packet);
     }
 
@@ -74,12 +70,12 @@ public class LoggingClientListener extends ClientListener {
     }
 
     @Override
-    public void onPluginMessage(PacketFAPluginMessage packet) {
+    public void onPluginMessage(PacketPluginMessageBase packet) {
         logger.log(Level.INFO, "Plugin message recieved channel={0}, message=", new Object[]{packet.getChannel(), packet.getContent()});
     }
 
     @Override
-    public void onRespawn(Packet09Respawn packet) {
+    public void onRespawn(PacketRespawnBase packet) {
         logger.log(Level.INFO, "Respawning; gamemode={0}, difficulty={1}", new Object[]{packet.getGamemode(), packet.getDifficulty()});
     }
 

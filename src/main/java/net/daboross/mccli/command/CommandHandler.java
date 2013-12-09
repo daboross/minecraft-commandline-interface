@@ -25,10 +25,6 @@ import java.util.logging.Level;
 import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.log.ChatColor;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class CommandHandler {
 
     private final Map<String, Command> aliasMap = new HashMap<>();

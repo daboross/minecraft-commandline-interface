@@ -22,10 +22,6 @@ import java.util.HashMap;
 import java.util.Map;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class PersistentInfo {
 
     private final Map<String, AuthenticationResponse> online = new HashMap<>();

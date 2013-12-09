@@ -19,11 +19,9 @@ package net.daboross.mccli.clients;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 import net.theunnameddude.mcclient.client.MinecraftClientImpl;
+import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
+import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class CurrentlyOnlineClient {
 
     private final String username;
@@ -32,13 +30,13 @@ public class CurrentlyOnlineClient {
     private final AuthenticationResponse auth;
     private final MinecraftClient client;
 
-    public CurrentlyOnlineClient(String username, String host, int port, AuthenticationResponse auth) {
+    public CurrentlyOnlineClient(String username, String host, int port, AuthenticationResponse auth, boolean use1_7_2) {
         this.username = username;
         this.host = host;
         this.port = port;
         this.auth = auth;
         this.client = new MinecraftClientImpl();
-        client.connect(host, port, auth);
+        client.connect(host, port, auth, use1_7_2 ? new PacketConstructor1_7_2() : new PacketConstructor1_6_4());
     }
 
     public String getUsername() {
@@ -60,5 +58,4 @@ public class CurrentlyOnlineClient {
     public MinecraftClient getClient() {
         return client;
     }
-    
 }

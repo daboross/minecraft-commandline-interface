@@ -20,10 +20,6 @@ import java.util.Arrays;
 import net.daboross.mccli.log.ChatColor;
 import net.daboross.mccli.utils.ArrayUtils;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public abstract class Command {
 
     protected final String[] aliases;

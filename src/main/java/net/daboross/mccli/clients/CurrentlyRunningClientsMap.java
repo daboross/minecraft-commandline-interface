@@ -26,10 +26,6 @@ import java.util.Set;
 import net.theunnameddude.mcclient.api.ClientListener;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class CurrentlyRunningClientsMap {
 
     private final Map<MinecraftClient, String> clients = new HashMap<>();

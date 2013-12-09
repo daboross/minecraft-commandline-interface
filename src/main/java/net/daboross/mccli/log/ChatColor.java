@@ -127,9 +127,7 @@ public enum ChatColor {
 
     private ChatColor(char code) {
         this.code = code;
-        this.toString = new String(new char[]{
-            COLOR_CHAR, code
-        });
+        this.toString = new String(new char[]{COLOR_CHAR, code});
     }
 
     @Override

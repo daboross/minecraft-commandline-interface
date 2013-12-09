@@ -26,11 +26,9 @@ import net.theunnameddude.mcclient.api.MinecraftClient;
 import net.theunnameddude.mcclient.api.MinecraftClientConnector;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 import net.theunnameddude.mcclient.api.auth.Authenticator;
+import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
+import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ConnectOfflineMode extends Command {
 
     private final MinecraftInterface main;
@@ -38,30 +36,33 @@ public class ConnectOfflineMode extends Command {
     public ConnectOfflineMode(MinecraftInterface main) {
         super("connect-offline");
         setHelpText("Connect to a server offline mode");
-        setHelpArgs("Host", "Port", "Username");
+        setHelpArgs("Host:Port", "-6", "Usernames...");
         this.main = main;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length < 3) {
+        if (args.length < 2) {
             sendHelpText(sender);
             return;
         }
-        String host = args[0];
-        String port = args[1];
-        int portInt;
+        String[] hostport = args[0].split(":");
+        String host = hostport[0];
+        int port = hostport.length > 1 ? Integer.parseInt(hostport[1]) : 25565;
         try {
-            portInt = Integer.parseInt(port);
+            port = hostport.length > 1 ? Integer.parseInt(hostport[1]) : 25565;
         } catch (NumberFormatException ex) {
-            sender.sendMessage(Level.WARNING, ChatColor.GREEN + port + ChatColor.DARK_RED + " isn't an integer");
+            sender.sendMessage(Level.WARNING, ChatColor.GREEN.toString() + port + ChatColor.DARK_RED + " isn't an integer");
             return;
         }
-        String username = args[2];
-        sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + portInt + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
-        AuthenticationResponse auth = Authenticator.offlineMode(username);
-        MinecraftClient client = MinecraftClientConnector.connect(host, portInt, auth);
-        client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
-        main.getClients().addClient(client, username);
+        boolean use1_6_4 = args[1].equals("-6");
+        for (int i = use1_6_4 ? 2 : 1; i < args.length; i++) {
+            String username = args[i];
+            sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
+            AuthenticationResponse auth = Authenticator.offlineMode(username);
+            MinecraftClient client = MinecraftClientConnector.connect(host, port, auth, use1_6_4 ? new PacketConstructor1_6_4() : new PacketConstructor1_7_2());
+            client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
+            main.getClients().addClient(client, username);
+        }
     }
 }

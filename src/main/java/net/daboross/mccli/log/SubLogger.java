@@ -19,10 +19,6 @@ package net.daboross.mccli.log;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class SubLogger extends Logger {
 
     private final String name;

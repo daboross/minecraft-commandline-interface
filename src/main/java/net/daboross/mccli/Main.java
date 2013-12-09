@@ -17,11 +17,10 @@
 package net.daboross.mccli;
 
 import java.util.logging.Level;
-import net.daboross.mccli.command.CommandHandler;
-import net.daboross.mccli.log.MCOutput;
 import java.util.logging.Logger;
 import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
+import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.commands.ConnectOfflineMode;
 import net.daboross.mccli.commands.ConnectOnlineMode;
@@ -31,26 +30,26 @@ import net.daboross.mccli.commands.HelpCommand;
 import net.daboross.mccli.commands.ListConnected;
 import net.daboross.mccli.commands.LocalHostAlias;
 import net.daboross.mccli.commands.SendText;
+import net.daboross.mccli.input.InputHandlerThread;
+import net.daboross.mccli.log.MCIO;
 import net.daboross.mccli.log.SubLogger;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class Main implements MinecraftInterface {
 
     public static void main(String[] args) {
         Main main = new Main();
         main.start();
     }
-    private final MCOutput output;
+    private final MCIO output;
     private final Logger logger;
+    private final InputHandlerThread input;
     private final CommandHandler commands;
     private final CurrentlyRunningClientsMap clients;
 
     public Main() {
-        output = new MCOutput();
+        output = new MCIO();
         logger = output.getLogger();
+        input = output.getInputThread();
         commands = new CommandHandler(this);
         clients = new CurrentlyRunningClientsMap();
     }
@@ -76,6 +75,10 @@ public class Main implements MinecraftInterface {
     @Override
     public Logger getLogger() {
         return logger;
+    }
+
+    public InputHandlerThread getInput() {
+        return input;
     }
 
     @Override

@@ -26,11 +26,9 @@ import net.theunnameddude.mcclient.api.MinecraftClient;
 import net.theunnameddude.mcclient.api.MinecraftClientConnector;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 import net.theunnameddude.mcclient.api.auth.Authenticator;
+import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
+import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ConnectOnlineMode extends Command {
 
     private final MinecraftInterface main;
@@ -38,37 +36,40 @@ public class ConnectOnlineMode extends Command {
     public ConnectOnlineMode(MinecraftInterface main) {
         super("connect-online");
         setHelpText("Connect to a server");
-        setHelpArgs("Host", "Port", "Username", "Password");
+        setHelpArgs("Host:Port", "-6", "Usernames...");
         this.main = main;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length < 4) {
+        if (args.length < 2) {
             sendHelpText(sender);
             return;
         }
-        String host = args[0];
-        String port = args[1];
-        int portInt;
+        String[] hostport = args[0].split(":");
+        String host = hostport[0];
+        int port;
         try {
-            portInt = Integer.parseInt(port);
+            port = hostport.length > 1 ? Integer.parseInt(hostport[1]) : 25565;
         } catch (NumberFormatException ex) {
-            sender.sendMessage(Level.WARNING, ChatColor.GREEN + port + ChatColor.DARK_RED + " isn't an integer");
+            sender.sendMessage(Level.WARNING, ChatColor.GREEN.toString() + hostport[1] + ChatColor.DARK_RED + " isn't an integer");
             return;
         }
-        String username = args[2];
-        String password = args[3];
-        sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + portInt + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
-        AuthenticationResponse auth;
-        try {
-            auth = Authenticator.sendRequest(username, password);
-        } catch (Exception e) {
-            main.getLogger().log(Level.WARNING, "Authenticator error: {0}", e.toString());
-            return;
+        boolean use1_6_4 = args[1].equals("-6");
+        for (int i = use1_6_4 ? 2 : 1; i < args.length; i++) {
+            String username = args[i];
+            String password = main.getInput().passwordInput("(pass for " + username + ")# ");
+            sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
+            AuthenticationResponse auth;
+            try {
+                auth = Authenticator.sendRequest(username, password);
+            } catch (Exception e) {
+                main.getLogger().log(Level.WARNING, "Authenticator error: {0}", e.toString());
+                return;
+            }
+            MinecraftClient client = MinecraftClientConnector.connect(host, port, auth, use1_6_4 ? new PacketConstructor1_6_4() : new PacketConstructor1_7_2());
+            client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
+            main.getClients().addClient(client, username);
         }
-        MinecraftClient client = MinecraftClientConnector.connect(host, portInt, auth);
-        client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
-        main.getClients().addClient(client, username);
     }
 }
