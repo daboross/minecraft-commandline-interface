@@ -29,6 +29,7 @@ import net.daboross.mccli.commands.EndCommand;
 import net.daboross.mccli.commands.HelpCommand;
 import net.daboross.mccli.commands.ListConnected;
 import net.daboross.mccli.commands.LocalHostAlias;
+import net.daboross.mccli.commands.ParseFileCommand;
 import net.daboross.mccli.commands.SendText;
 import net.daboross.mccli.input.InputHandlerThread;
 import net.daboross.mccli.log.MCIO;
@@ -64,6 +65,9 @@ public class Main implements MinecraftInterface {
         commands.addCommand(new SendText(this));
         commands.addCommand(new Disconnect(this));
         commands.addCommand(new ListConnected(this));
+        ParseFileCommand pfcmd = new ParseFileCommand(this);
+        commands.addCommand(pfcmd);
+        commands.addCommand(pfcmd.getRunCommand());
         output.start(commands);
     }
 
