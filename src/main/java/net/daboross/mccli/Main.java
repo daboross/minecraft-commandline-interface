@@ -66,8 +66,10 @@ public class Main implements MinecraftInterface {
         commands.addCommand(new Disconnect(this));
         commands.addCommand(new ListConnected(this));
         ParseFileCommand pfcmd = new ParseFileCommand(this);
+        pfcmd.prepareThreads();
         commands.addCommand(pfcmd);
         commands.addCommand(pfcmd.getRunCommand());
+        commands.addCommand(pfcmd.getSaveCommand());
         output.start(commands);
     }
 
