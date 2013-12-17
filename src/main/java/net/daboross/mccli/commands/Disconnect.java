@@ -21,13 +21,8 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
-import net.daboross.mccli.utils.ArrayUtils;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class Disconnect extends Command {
 
     private final MinecraftInterface main;

@@ -18,10 +18,6 @@ package net.daboross.mccli.command;
 
 import java.util.logging.Level;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public interface Sender {
 
     public void sendMessage(String message);

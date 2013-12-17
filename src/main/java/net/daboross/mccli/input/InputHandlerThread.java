@@ -16,6 +16,7 @@
  */
 package net.daboross.mccli.input;
 
+import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jline.console.ConsoleReader;
@@ -24,10 +25,6 @@ import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
 import net.daboross.mccli.utils.ArrayUtils;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class InputHandlerThread extends Thread {
 
     private final Logger logger;
@@ -63,6 +60,15 @@ public class InputHandlerThread extends Thread {
             } catch (Throwable t) {
                 logger.log(Level.INFO, "Error in input thread", t);
             }
+        }
+    }
+
+    public String passwordInput(String prompt) {
+        try {
+            return console.readLine(prompt, (char) 0);
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, "Error getting password", ex);
+            throw new RuntimeException("Error getting password", ex);
         }
     }
 }

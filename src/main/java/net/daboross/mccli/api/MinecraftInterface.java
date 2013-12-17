@@ -19,15 +19,14 @@ package net.daboross.mccli.api;
 import java.util.logging.Logger;
 import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
 import net.daboross.mccli.command.Sender;
+import net.daboross.mccli.input.InputHandlerThread;
 import net.daboross.mccli.log.SubLogger;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public interface MinecraftInterface {
 
     public Logger getLogger();
+
+    public InputHandlerThread getInput();
 
     public SubLogger getSubLogger(String name);
 

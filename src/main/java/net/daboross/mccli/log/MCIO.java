@@ -26,17 +26,13 @@ import jline.internal.Log;
 import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.input.InputHandlerThread;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
-public class MCOutput {
+public class MCIO {
 
     private ConsoleReader consoleReader;
     private ClientLogger logger;
-    private Thread inputThread;
+    private InputHandlerThread inputThread;
 
-    public MCOutput() {
+    public MCIO() {
         try {
             consoleReader = new ConsoleReader();
         } catch (IOException ex) {
@@ -63,6 +59,10 @@ public class MCOutput {
 
     public ClientLogger getLogger() {
         return logger;
+    }
+
+    public InputHandlerThread getInputThread() {
+        return inputThread;
     }
 
     public void end() {

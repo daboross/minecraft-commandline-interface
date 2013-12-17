@@ -16,35 +16,12 @@
  */
 package net.daboross.mccli.input;
 
-//import java.util.ArrayList;
-//import java.util.Arrays;
-//import java.util.ListIterator;
-//import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.daboross.mccli.log.ChatColor;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class InputParser {
-
-    private final Pattern pattern = Pattern.compile(".*\\{.*\\.\\..*\\}");
 
     public String parse(String text) {
         text = ChatColor.translateAlternateColorCodes('&', text);
-//        Matcher m = pattern.matcher(text);
-//        if (m.find()) {
-//            ArrayList<String> words = new ArrayList<>(Arrays.asList(text.split(" ")));
-//            ListIterator<String> i = words.listIterator();
-//            
-//            for (; i.hasNext();) {
-//                String word = i.next();
-//                
-//                m.appendReplacement(null, text)
-//            }
-//            text = text.replaceAll(".*\\{.*\\.\\..*\\}", "");
-//        }
         return text;
     }
 }

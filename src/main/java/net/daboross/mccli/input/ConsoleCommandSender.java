@@ -20,10 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.daboross.mccli.command.Sender;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ConsoleCommandSender implements Sender {
 
     private final Logger logger;

@@ -20,10 +20,6 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class EndCommand extends Command {
 
     private final MinecraftInterface main;

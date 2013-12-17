@@ -16,10 +16,6 @@
  */
 package net.daboross.mccli.clients;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class SavedServer {
 
     private String host;

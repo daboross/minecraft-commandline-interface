@@ -24,10 +24,6 @@ import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ListConnected extends Command {
 
     private final MinecraftInterface main;
@@ -48,7 +44,7 @@ public class ListConnected extends Command {
         Iterator<Map.Entry<MinecraftClient, String>> i = main.getClients().getAllClients().iterator();
         if (i.hasNext()) {
             StringBuilder builder = new StringBuilder(ChatColor.GREEN.toString()).append("Connected clients: ").append(ChatColor.DARK_RED).append(i.next().getValue());
-            for (; i.hasNext();) {
+            for (; i.hasNext(); ) {
                 builder.append(ChatColor.GREEN).append(", ").append(ChatColor.DARK_RED).append(i.next().getValue());
             }
             sender.sendMessage(builder.toString());

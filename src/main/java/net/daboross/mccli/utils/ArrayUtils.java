@@ -16,10 +16,6 @@
  */
 package net.daboross.mccli.utils;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class ArrayUtils {
 
     public static String join(Object[] objects, String seperator) {

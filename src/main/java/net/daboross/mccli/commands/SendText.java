@@ -24,10 +24,6 @@ import net.daboross.mccli.log.ChatColor;
 import net.daboross.mccli.utils.ArrayUtils;
 import net.theunnameddude.mcclient.api.MinecraftClient;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class SendText extends Command {
 
     private final MinecraftInterface main;

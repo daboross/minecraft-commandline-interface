@@ -28,7 +28,6 @@ import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 import net.theunnameddude.mcclient.api.auth.Authenticator;
 
 /**
- *
  * @author Dabo Ross <http://www.daboross.net/>
  */
 public class ConnectMultipleOfflineMode extends Command {

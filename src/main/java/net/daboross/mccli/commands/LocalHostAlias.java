@@ -25,11 +25,9 @@ import net.theunnameddude.mcclient.api.MinecraftClient;
 import net.theunnameddude.mcclient.api.MinecraftClientConnector;
 import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
 import net.theunnameddude.mcclient.api.auth.Authenticator;
+import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
+import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
 
-/**
- *
- * @author Dabo Ross <http://www.daboross.net/>
- */
 public class LocalHostAlias extends Command {
 
     private final MinecraftInterface main;
@@ -37,23 +35,26 @@ public class LocalHostAlias extends Command {
     public LocalHostAlias(MinecraftInterface main) {
         super("local");
         setHelpText("Connects to the offline server localhost:25565");
-        setHelpArgs("Username");
+        setHelpArgs("-6", "Usernames...");
         this.main = main;
     }
 
     @Override
     public void run(Sender sender, String commandLabel, String[] args) {
-        if (args.length != 1) {
+        if (args.length == 0) {
             sendHelpText(sender);
             return;
         }
         String host = "localhost";
         int port = 25565;
-        String username = args[0];
-        sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
-        AuthenticationResponse auth = Authenticator.offlineMode(username);
-        MinecraftClient client = MinecraftClientConnector.connect(host, port, auth);
-        client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
-        main.getClients().addClient(client, host + ":" + username);
+        boolean use1_6_4 = args[0].equals("-6");
+        for (int i = use1_6_4 ? 1 : 0; i < args.length; i++) {
+            String username = args[i];
+            sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
+            AuthenticationResponse auth = Authenticator.offlineMode(username);
+            MinecraftClient client = MinecraftClientConnector.connect(host, port, auth, use1_6_4 ? new PacketConstructor1_6_4() : new PacketConstructor1_7_2());
+            client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
+            main.getClients().addClient(client, host + ":" + username);
+        }
     }
 }
