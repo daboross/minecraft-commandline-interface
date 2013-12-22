@@ -63,7 +63,7 @@ public class LoggingClientListener extends ClientListener {
     @Override
     public void onChat(JSONObject message) {
         try {
-            logger.log(Level.INFO, "[Chat] {0}", message.get("text"));
+            logger.log(Level.INFO, "[Chat] {0}", message);
         } catch (JSONException ex) {
             logger.log(Level.SEVERE, "Failed to get chat text", ex);
         }
