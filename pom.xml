@@ -4,7 +4,7 @@
 
     <groupId>net.daboross</groupId>
     <artifactId>mc-cli</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>MinecraftCommandlineInterface</name>
@@ -46,7 +46,7 @@
         <dependency>
             <groupId>net.theunnameddude</groupId>
             <artifactId>mc-protocol-framework</artifactId>
-            <version>1.1.2-SNAPSHOT</version>
+            <version>1.2.1-SNAPSHOT</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
