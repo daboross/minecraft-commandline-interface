@@ -22,15 +22,11 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
 import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.command.Sender;
-import net.daboross.mccli.commands.ConnectMultipleOfflineMode;
-import net.daboross.mccli.commands.ConnectOfflineMode;
-import net.daboross.mccli.commands.ConnectOnlineMode;
+import net.daboross.mccli.commands.Connect;
 import net.daboross.mccli.commands.Disconnect;
 import net.daboross.mccli.commands.EndCommand;
 import net.daboross.mccli.commands.HelpCommand;
 import net.daboross.mccli.commands.ListConnected;
-import net.daboross.mccli.commands.LocalHostAlias;
-import net.daboross.mccli.commands.ParseFileCommand;
 import net.daboross.mccli.commands.SendText;
 import net.daboross.mccli.input.InputHandlerThread;
 import net.daboross.mccli.log.MCIO;
@@ -61,17 +57,10 @@ public class Main implements MinecraftInterface {
         logger.log(Level.INFO, "Starting version {0}", getVersion());
         commands.addCommand(new HelpCommand(commands));
         commands.addCommand(new EndCommand(this));
-        commands.addCommand(new ConnectOnlineMode(this));
-        commands.addCommand(new ConnectOfflineMode(this));
-        commands.addCommand(new LocalHostAlias(this));
+        commands.addCommand(new Connect(this));
         commands.addCommand(new SendText(this));
         commands.addCommand(new Disconnect(this));
         commands.addCommand(new ListConnected(this));
-        commands.addCommand(new ConnectMultipleOfflineMode(this));
-        ParseFileCommand pfcmd = new ParseFileCommand(this);
-        pfcmd.prepareThreads();
-        commands.addCommand(pfcmd);
-        commands.addCommand(pfcmd.getRunCommand());
         output.start(commands);
     }
 
