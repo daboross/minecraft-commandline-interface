@@ -18,6 +18,8 @@ package net.daboross.mccli.connect;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import net.daboross.mccli.log.Parser;
 import net.theunnameddude.mcclient.api.ClientListener;
 import net.theunnameddude.mcclient.api.ProtocolStatus;
 import net.theunnameddude.mcclient.client.ServerInfo;
@@ -52,7 +54,7 @@ public class LoggingClientListener extends ClientListener {
 
     @Override
     public void onKick(String reason) {
-        logger.log(Level.INFO, "Kicked for {0}", reason);
+        logger.log(Level.INFO, "Kicked for {0}", Parser.parseJson(new JSONObject(reason)));
     }
 
     @Override
@@ -63,7 +65,7 @@ public class LoggingClientListener extends ClientListener {
     @Override
     public void onChat(JSONObject message) {
         try {
-            logger.log(Level.INFO, "[Chat] {0}", message);
+            logger.log(Level.INFO, Parser.parseJson(message));
         } catch (JSONException ex) {
             logger.log(Level.SEVERE, "Failed to get chat text", ex);
         }
