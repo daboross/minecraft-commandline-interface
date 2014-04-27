@@ -41,14 +41,13 @@ public class Main implements MinecraftInterface {
 
     private final MCIO output;
     private final Logger logger;
-    private final InputHandlerThread input;
+    private InputHandlerThread input;
     private final CommandHandler commands;
     private final CurrentlyRunningClientsMap clients;
 
     public Main() {
         output = new MCIO();
         logger = output.getLogger();
-        input = output.getInputThread();
         commands = new CommandHandler(this);
         clients = new CurrentlyRunningClientsMap();
     }
@@ -62,6 +61,7 @@ public class Main implements MinecraftInterface {
         commands.addCommand(new Disconnect(this));
         commands.addCommand(new ListConnected(this));
         output.start(commands);
+        input = output.getInputThread();
     }
 
     private String getVersion() {
