@@ -72,9 +72,13 @@ public class MCIO {
     }
 
     public void end() {
+        flushHistory();
         if (inputThread != null) {
             inputThread.interrupt();
         }
+    }
+
+    public void flushHistory() {
         try {
             ((FileHistory) consoleReader.getHistory()).flush();
         } catch (IOException e) {

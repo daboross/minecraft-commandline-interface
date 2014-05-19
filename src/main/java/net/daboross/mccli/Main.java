@@ -16,6 +16,8 @@
  */
 package net.daboross.mccli;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.daboross.mccli.api.MinecraftInterface;
@@ -33,6 +35,8 @@ import net.daboross.mccli.log.MCIO;
 import net.daboross.mccli.log.SubLogger;
 
 public class Main implements MinecraftInterface {
+
+    private final ExecutorService executorService = Executors.newCachedThreadPool();
 
     public static void main(String[] args) {
         Main main = new Main();
@@ -92,6 +96,11 @@ public class Main implements MinecraftInterface {
     @Override
     public CurrentlyRunningClientsMap getClients() {
         return clients;
+    }
+
+    @Override
+    public ExecutorService getExecutor() {
+        return executorService;
     }
 
     @Override

@@ -43,7 +43,13 @@ public class Disconnect extends Command {
         String name = args[0];
         for (Map.Entry<MinecraftClient, String> client : main.getClients().getClientsWith(name)) {
             sender.sendMessage(ChatColor.GREEN + "Disconnecting " + ChatColor.DARK_RED + client.getValue());
-            client.getKey().shutdown();
+            final MinecraftClient minecraftClient = client.getKey();
+            main.getExecutor().execute(new Runnable() {
+                @Override
+                public void run() {
+                    minecraftClient.shutdown();
+                }
+            });
         }
     }
 }

@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jline.console.ConsoleReader;
+import jline.console.history.FileHistory;
 import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
@@ -56,6 +57,12 @@ public class InputHandlerThread extends Thread {
                     line = parser.parse(line);
                     String[] args = line.split(" ");
                     commandHandler.dispatchCommand(consoleSender, args[0], ArrayUtils.sub(args));
+                    // flush history
+                    try {
+                        ((FileHistory) console.getHistory()).flush();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             } catch (Throwable t) {
                 logger.log(Level.INFO, "Error in input thread", t);

@@ -16,6 +16,7 @@
  */
 package net.daboross.mccli.api;
 
+import java.util.concurrent.ExecutorService;
 import java.util.logging.Logger;
 import net.daboross.mccli.clients.CurrentlyRunningClientsMap;
 import net.daboross.mccli.command.Sender;
@@ -33,6 +34,8 @@ public interface MinecraftInterface {
     public void dispatchCommand(Sender sender, String command, String args);
 
     public CurrentlyRunningClientsMap getClients();
+
+    public ExecutorService getExecutor();
 
     public void stop();
 }
