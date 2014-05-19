@@ -16,29 +16,35 @@
  */
 package net.daboross.mccli.log;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.logging.Level;
 import jline.UnsupportedTerminal;
 import jline.console.ConsoleReader;
+import jline.console.history.FileHistory;
 import jline.internal.Log;
 import net.daboross.mccli.command.CommandHandler;
 import net.daboross.mccli.input.InputHandlerThread;
 
 public class MCIO {
 
+    private static final String LINE_SEPARATOR = System.getProperty("line.separator");
     private ConsoleReader consoleReader;
     private ClientLogger logger;
     private InputHandlerThread inputThread;
 
     public MCIO() {
+        File dataDir = new File(new File(new File(System.getProperty("user.home"), ".local"), "share"), "mc-cli");
         try {
             consoleReader = new ConsoleReader();
+            consoleReader.setHistory(new FileHistory(new File(dataDir, "command-history.log")));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        logger = new ClientLogger(consoleReader);
+        logger = new ClientLogger(consoleReader, dataDir);
     }
 
     public void start(CommandHandler commandHandler) {
@@ -48,8 +54,8 @@ public class MCIO {
             }
         }));
         logger.startDispatcher();
-        System.setErr(new PrintStream(new LoggingOutputStream(logger, Level.SEVERE), true));
-        System.setOut(new PrintStream(new LoggingOutputStream(logger, Level.INFO), true));
+        System.setErr(new PrintStream(new LoggingOutputStream(Level.SEVERE), true));
+        System.setOut(new PrintStream(new LoggingOutputStream(Level.INFO), true));
         if (consoleReader.getTerminal() instanceof UnsupportedTerminal) {
             logger.info("Unable to initialize jline.");
         }
@@ -68,6 +74,29 @@ public class MCIO {
     public void end() {
         if (inputThread != null) {
             inputThread.interrupt();
+        }
+        try {
+            ((FileHistory) consoleReader.getHistory()).flush();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public class LoggingOutputStream extends ByteArrayOutputStream {
+
+        private final Level level;
+
+        public LoggingOutputStream(Level level) {
+            this.level = level;
+        }
+
+        @Override
+        public void flush() throws IOException {
+            String contents = toString();
+            super.reset();
+            if (!contents.isEmpty() && !contents.equals(LINE_SEPARATOR)) {
+                logger.log(level, contents);
+            }
         }
     }
 }

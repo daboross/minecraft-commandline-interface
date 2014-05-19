@@ -18,13 +18,14 @@ package net.daboross.mccli.connect;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import net.daboross.mccli.log.Parser;
+import net.daboross.mccli.log.ChatColor;
 import net.theunnameddude.mcclient.api.ClientListener;
 import net.theunnameddude.mcclient.api.ProtocolStatus;
 import net.theunnameddude.mcclient.client.ServerInfo;
 import net.theunnameddude.mcclient.protocol.base.PacketPluginMessageBase;
 import net.theunnameddude.mcclient.protocol.base.PacketRespawnBase;
 import net.theunnameddude.mcclient.protocol.base.PacketTeamBase;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -53,7 +54,7 @@ public class LoggingClientListener extends ClientListener {
 
     @Override
     public void onKick(String reason) {
-        logger.log(Level.INFO, "Kicked for {0}", Parser.parseJson(new JSONObject(reason)));
+        logger.log(Level.INFO, "Kicked for {0}", parseJson(new JSONObject(reason)));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class LoggingClientListener extends ClientListener {
     @Override
     public void onChat(JSONObject message) {
         try {
-            logger.log(Level.INFO, "[Chat] {0}", Parser.parseJson(message));
+            logger.log(Level.INFO, "[Chat] {0}", parseJson(message));
         } catch (JSONException ex) {
             logger.log(Level.SEVERE, "Failed to get chat text", ex);
         }
@@ -98,5 +99,24 @@ public class LoggingClientListener extends ClientListener {
     @Override
     public void onStatusChange(ProtocolStatus status) {
         logger.log(Level.INFO, "ProtocolStatus={0}", status.name());
+    }
+
+    private static String parseJson(JSONObject object) {
+        StringBuilder messageBuilder = new StringBuilder();
+        messageBuilder.append(object.getString("text")).append(" ");
+        JSONArray array = object.getJSONArray("extra");
+        if (array != null) {
+            for (int i = 0; i < array.length(); i++) {
+                JSONObject tempObj = array.optJSONObject(i);
+                if (tempObj == null) {
+                    messageBuilder.append(array.getString(i));
+                } else {
+                    ChatColor color = ChatColor.valueOf(array.getJSONObject(i).getString("color").toUpperCase());
+                    messageBuilder.append(color);
+                    messageBuilder.append(array.getJSONObject(i).getString("text"));
+                }
+            }
+        }
+        return messageBuilder.toString();
     }
 }
