@@ -54,7 +54,7 @@ public class LoggingClientListener extends ClientListener {
 
     @Override
     public void onKick(String reason) {
-        logger.log(Level.INFO, "Kicked for {0}", parseJson(new JSONObject(reason)));
+        logger.log(Level.INFO, "Kicked for {0}", parseJsonOpt(reason));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class LoggingClientListener extends ClientListener {
     @Override
     public void onChat(JSONObject message) {
         try {
-            logger.log(Level.INFO, "[Chat] {0}", parseJson(message));
+            logger.log(Level.INFO, "[Chat] {0}", parseJsonMessage(message));
         } catch (JSONException ex) {
             logger.log(Level.SEVERE, "Failed to get chat text", ex);
         }
@@ -101,22 +101,44 @@ public class LoggingClientListener extends ClientListener {
         logger.log(Level.INFO, "ProtocolStatus={0}", status.name());
     }
 
-    private static String parseJson(JSONObject object) {
-        StringBuilder messageBuilder = new StringBuilder();
-        messageBuilder.append(object.getString("text")).append(" ");
-        JSONArray array = object.getJSONArray("extra");
-        if (array != null) {
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject tempObj = array.optJSONObject(i);
-                if (tempObj == null) {
-                    messageBuilder.append(array.getString(i));
-                } else {
-                    ChatColor color = ChatColor.valueOf(array.getJSONObject(i).getString("color").toUpperCase());
-                    messageBuilder.append(color);
-                    messageBuilder.append(array.getJSONObject(i).getString("text"));
+    private static String parseJsonOpt(String str) {
+        if (str.startsWith("{") && str.endsWith("}")) {
+            return parseJsonMessage(new JSONObject(str));
+        } else {
+            return str;
+        }
+    }
+
+    private static String parseJsonMessage(JSONObject object) {
+        return appendJson(new StringBuilder(), object).toString();
+    }
+
+    private static StringBuilder appendJson(StringBuilder messageBuilder, JSONObject object) {
+        if (object.has("text")) {
+            ChatColor color;
+            if (object.has("color")) {
+                color = ChatColor.valueOf(object.getString("color").toUpperCase());
+            } else {
+                color = ChatColor.RESET;
+            }
+            messageBuilder.append(color);
+            if (object.has("text")) {
+                messageBuilder.append(object.getString("text"));
+            }
+        }
+        if (object.has("extra")) {
+            JSONArray array = object.getJSONArray("extra");
+            if (array != null) {
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject tempObj = array.optJSONObject(i);
+                    if (tempObj == null) {
+                        messageBuilder.append(array.getString(i));
+                    } else {
+                        appendJson(messageBuilder, tempObj);
+                    }
                 }
             }
         }
-        return messageBuilder.toString();
+        return messageBuilder;
     }
 }
