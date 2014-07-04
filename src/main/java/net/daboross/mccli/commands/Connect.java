@@ -34,7 +34,7 @@ public class Connect extends Command {
     public Connect(MinecraftInterface main) {
         super("connect");
         setHelpText("Connect to a server offline mode");
-        setHelpArgs("Host:Port", "-o", "-6", "Usernames...");
+        setHelpArgs("Host:Port", "-o", "Usernames...");
         this.main = main;
     }
 
