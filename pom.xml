@@ -42,10 +42,22 @@
         </repository>
     </repositories>
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>net.theunnameddude</groupId>
             <artifactId>mc-protocol-framework</artifactId>
             <version>1.2.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>-->
+        <dependency>
+            <groupId>org.spacehq</groupId>
+            <artifactId>mcprotocollib</artifactId>
+            <version>1.7.7-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.daboross.json</groupId>
+            <artifactId>json</artifactId>
+            <version>1.0.3</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

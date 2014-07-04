@@ -22,7 +22,8 @@ import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
 import net.daboross.mccli.utils.ArrayUtils;
-import net.theunnameddude.mcclient.api.MinecraftClient;
+import org.spacehq.mc.protocol.packet.ingame.client.ClientChatPacket;
+import org.spacehq.packetlib.Client;
 
 public class SendText extends Command {
 
@@ -43,9 +44,9 @@ public class SendText extends Command {
         }
         String name = args[0];
         String message = ArrayUtils.join(args, 1, " ");
-        for (Map.Entry<MinecraftClient, String> client : main.getClients().getClientsWith(name)) {
+        for (Map.Entry<Client, String> client : main.getClients().getClientsWith(name)) {
             sender.sendMessage(ChatColor.GREEN + "Sending message to " + ChatColor.DARK_RED + client.getValue());
-            client.getKey().sendMessage(message);
+            client.getKey().getSession().send(new ClientChatPacket(message));
         }
     }
 }

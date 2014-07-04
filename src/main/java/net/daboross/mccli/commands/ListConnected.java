@@ -22,7 +22,7 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
-import net.theunnameddude.mcclient.api.MinecraftClient;
+import org.spacehq.packetlib.Client;
 
 public class ListConnected extends Command {
 
@@ -41,7 +41,7 @@ public class ListConnected extends Command {
             sendHelpText(sender);
             return;
         }
-        Iterator<Map.Entry<MinecraftClient, String>> i = main.getClients().getAllClients().iterator();
+        Iterator<Map.Entry<Client, String>> i = main.getClients().getAllClients().iterator();
         if (i.hasNext()) {
             StringBuilder builder = new StringBuilder(ChatColor.GREEN.toString()).append("Connected clients: ").append(ChatColor.DARK_RED).append(i.next().getValue());
             for (; i.hasNext(); ) {

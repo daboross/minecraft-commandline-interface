@@ -23,29 +23,30 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import net.theunnameddude.mcclient.api.ClientListener;
-import net.theunnameddude.mcclient.api.MinecraftClient;
+import org.spacehq.packetlib.Client;
+import org.spacehq.packetlib.event.session.DisconnectedEvent;
+import org.spacehq.packetlib.event.session.SessionAdapter;
 
 public class CurrentlyRunningClientsMap {
 
-    private final Map<MinecraftClient, String> clients = new HashMap<>();
+    private final Map<Client, String> clients = new HashMap<>();
 
-    public void addClient(MinecraftClient client, String name) {
-        client.addListener(new ClientListenerRemover(client));
+    public void addClient(Client client, String name) {
+        client.getSession().addListener(new ClientListenerRemover(client));
         clients.put(client, name);
     }
 
     public void endAllClients() {
-        for (Iterator<MinecraftClient> i = clients.keySet().iterator(); i.hasNext(); ) {
-            MinecraftClient next = i.next();
+        for (Iterator<Client> i = clients.keySet().iterator(); i.hasNext(); ) {
+            Client next = i.next();
             i.remove();
-            next.shutdown();
+            next.getSession().disconnect("Ending all clients");
         }
     }
 
-    public List<Map.Entry<MinecraftClient, String>> getClientsWith(String nameRegex) {
-        List<Map.Entry<MinecraftClient, String>> list = new ArrayList<>();
-        for (Map.Entry<MinecraftClient, String> entry : clients.entrySet()) {
+    public List<Map.Entry<Client, String>> getClientsWith(String nameRegex) {
+        List<Map.Entry<Client, String>> list = new ArrayList<>();
+        for (Map.Entry<Client, String> entry : clients.entrySet()) {
             if (entry.getValue().matches(nameRegex)) {
                 list.add(entry);
             }
@@ -53,20 +54,20 @@ public class CurrentlyRunningClientsMap {
         return list;
     }
 
-    public Set<Map.Entry<MinecraftClient, String>> getAllClients() {
+    public Set<Map.Entry<Client, String>> getAllClients() {
         return Collections.unmodifiableSet(clients.entrySet());
     }
 
-    private class ClientListenerRemover extends ClientListener {
+    private class ClientListenerRemover extends SessionAdapter {
 
-        private final MinecraftClient client;
+        private final Client client;
 
-        public ClientListenerRemover(MinecraftClient client) {
+        public ClientListenerRemover(Client client) {
             this.client = client;
         }
 
         @Override
-        public void onDisconnected() {
+        public void disconnected(final DisconnectedEvent event) {
             clients.remove(client);
         }
     }

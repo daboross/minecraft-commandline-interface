@@ -21,7 +21,7 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
-import net.theunnameddude.mcclient.api.MinecraftClient;
+import org.spacehq.packetlib.Client;
 
 public class Disconnect extends Command {
 
@@ -41,13 +41,13 @@ public class Disconnect extends Command {
             return;
         }
         String name = args[0];
-        for (Map.Entry<MinecraftClient, String> client : main.getClients().getClientsWith(name)) {
-            sender.sendMessage(ChatColor.GREEN + "Disconnecting " + ChatColor.DARK_RED + client.getValue());
-            final MinecraftClient minecraftClient = client.getKey();
+        for (Map.Entry<Client, String> entry : main.getClients().getClientsWith(name)) {
+            sender.sendMessage(ChatColor.GREEN + "Disconnecting " + ChatColor.DARK_RED + entry.getValue());
+            final Client client = entry.getKey();
             main.getExecutor().execute(new Runnable() {
                 @Override
                 public void run() {
-                    minecraftClient.shutdown();
+                    client.getSession().disconnect("Shutting down");
                 }
             });
         }

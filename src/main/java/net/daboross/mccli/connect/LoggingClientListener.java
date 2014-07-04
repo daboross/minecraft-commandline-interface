@@ -19,126 +19,135 @@ package net.daboross.mccli.connect;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import net.daboross.mccli.log.ChatColor;
-import net.theunnameddude.mcclient.api.ClientListener;
-import net.theunnameddude.mcclient.api.ProtocolStatus;
-import net.theunnameddude.mcclient.client.ServerInfo;
-import net.theunnameddude.mcclient.protocol.base.PacketPluginMessageBase;
-import net.theunnameddude.mcclient.protocol.base.PacketRespawnBase;
-import net.theunnameddude.mcclient.protocol.base.PacketTeamBase;
 import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
+import org.spacehq.packetlib.event.session.ConnectedEvent;
+import org.spacehq.packetlib.event.session.DisconnectedEvent;
+import org.spacehq.packetlib.event.session.DisconnectingEvent;
+import org.spacehq.packetlib.event.session.PacketReceivedEvent;
+import org.spacehq.packetlib.event.session.PacketSentEvent;
+import org.spacehq.packetlib.event.session.SessionListener;
 
-public class LoggingClientListener extends ClientListener {
+public class LoggingClientListener implements SessionListener {
 
     private final Logger logger;
 
     public LoggingClientListener(Logger logger) {
         this.logger = logger;
     }
+//
+//    @Override
+//    public void onAuthComplete() {
+//        logger.log(Level.INFO, "Authentification complete");
+//    }
+//
+//    @Override
+//    public void onKick(String reason) {
+//        logger.log(Level.INFO, "Kicked for {0}", parseJsonOpt(reason));
+//    }
+//
+//    @Override
+//    public void onTeamPacket(PacketTeamBase packet) {
+//        logger.log(Level.INFO, "Team packet {0}", packet);
+//    }
+//
+//    @Override
+//    public void onChat(JSONObject message) {
+//        try {
+//            logger.log(Level.INFO, "[Chat] {0}", parseJsonMessage(message));
+//        } catch (JSONException ex) {
+//            logger.log(Level.SEVERE, "Failed to get chat text", ex);
+//        }
+//    }
+//
+//    @Override
+//    public void onPluginMessage(PacketPluginMessageBase packet) {
+//        logger.log(Level.INFO, "Plugin message recieved channel={0}, message=", new Object[]{packet.getChannel(), packet.getContent()});
+//    }
+//
+//    @Override
+//    public void onRespawn(PacketRespawnBase packet) {
+//        logger.log(Level.INFO, "Respawning; gamemode={0}, difficulty={1}", new Object[]{packet.getGamemode(), packet.getDifficulty()});
+//    }
+//
+//    @Override
+//    public void onAuthFail(String response) {
+//        logger.log(Level.INFO, "Authentification failed: {0}", response);
+//    }
+//
+//    @Override
+//    public void onServerInfo(ServerInfo info) {
+//        logger.log(Level.INFO, "ServerInfo; difficulty={0}, LevelType={1}, GameMode={2}, maxPlayers={3}", new Object[]{info.getDifficulty(), info.getLevelType(), info.getGameMode(), info.getMaxPlayers()});
+//    }
+//
+//    @Override
+//    public void onStatusChange(ProtocolStatus status) {
+//        logger.log(Level.INFO, "ProtocolStatus={0}", status.name());
+//    }
+//
+//    private static String parseJsonOpt(String str) {
+//        if (str.startsWith("{") && str.endsWith("}")) {
+//            return parseJsonMessage(new JSONObject(str));
+//        } else {
+//            return str;
+//        }
+//    }
+//
+//    private static String parseJsonMessage(JSONObject object) {
+//        return appendJson(new StringBuilder(), object).toString();
+//    }
+//
+//    private static StringBuilder appendJson(StringBuilder messageBuilder, JSONObject object) {
+//        if (object.has("text")) {
+//            ChatColor color;
+//            if (object.has("color")) {
+//                color = ChatColor.valueOf(object.getString("color").toUpperCase());
+//            } else {
+//                color = ChatColor.RESET;
+//            }
+//            messageBuilder.append(color);
+//            if (object.has("text")) {
+//                messageBuilder.append(object.getString("text"));
+//            }
+//        }
+//        if (object.has("extra")) {
+//            JSONArray array = object.getJSONArray("extra");
+//            if (array != null) {
+//                for (int i = 0; i < array.length(); i++) {
+//                    JSONObject tempObj = array.optJSONObject(i);
+//                    if (tempObj == null) {
+//                        messageBuilder.append(array.getString(i));
+//                    } else {
+//                        appendJson(messageBuilder, tempObj);
+//                    }
+//                }
+//            }
+//        }
+//        return messageBuilder;
+//    }
 
     @Override
-    public void onDisconnect() {
-        logger.log(Level.INFO, "Disconnecting");
+    public void packetReceived(final PacketReceivedEvent event) {
+        logger.log(Level.INFO, "Received {}", event.getPacket());
     }
 
     @Override
-    public void onDisconnected() {
-        logger.log(Level.INFO, "Disconnected");
+    public void packetSent(final PacketSentEvent event) {
+        logger.log(Level.INFO, "Sent {}", event.getPacket());
     }
 
     @Override
-    public void onAuthComplete() {
-        logger.log(Level.INFO, "Authentification complete");
-    }
-
-    @Override
-    public void onKick(String reason) {
-        logger.log(Level.INFO, "Kicked for {0}", parseJsonOpt(reason));
-    }
-
-    @Override
-    public void onTeamPacket(PacketTeamBase packet) {
-        logger.log(Level.INFO, "Team packet {0}", packet);
-    }
-
-    @Override
-    public void onChat(JSONObject message) {
-        try {
-            logger.log(Level.INFO, "[Chat] {0}", parseJsonMessage(message));
-        } catch (JSONException ex) {
-            logger.log(Level.SEVERE, "Failed to get chat text", ex);
-        }
-    }
-
-    @Override
-    public void onPluginMessage(PacketPluginMessageBase packet) {
-        logger.log(Level.INFO, "Plugin message recieved channel={0}, message=", new Object[]{packet.getChannel(), packet.getContent()});
-    }
-
-    @Override
-    public void onRespawn(PacketRespawnBase packet) {
-        logger.log(Level.INFO, "Respawning; gamemode={0}, difficulty={1}", new Object[]{packet.getGamemode(), packet.getDifficulty()});
-    }
-
-    @Override
-    public void onConnected() {
+    public void connected(final ConnectedEvent event) {
         logger.log(Level.INFO, "Connected!");
     }
 
     @Override
-    public void onAuthFail(String response) {
-        logger.log(Level.INFO, "Authentification failed: {0}", response);
+    public void disconnecting(final DisconnectingEvent event) {
+        logger.log(Level.INFO, "Disconnecting");
     }
 
     @Override
-    public void onServerInfo(ServerInfo info) {
-        logger.log(Level.INFO, "ServerInfo; difficulty={0}, LevelType={1}, GameMode={2}, maxPlayers={3}", new Object[]{info.getDifficulty(), info.getLevelType(), info.getGameMode(), info.getMaxPlayers()});
-    }
-
-    @Override
-    public void onStatusChange(ProtocolStatus status) {
-        logger.log(Level.INFO, "ProtocolStatus={0}", status.name());
-    }
-
-    private static String parseJsonOpt(String str) {
-        if (str.startsWith("{") && str.endsWith("}")) {
-            return parseJsonMessage(new JSONObject(str));
-        } else {
-            return str;
-        }
-    }
-
-    private static String parseJsonMessage(JSONObject object) {
-        return appendJson(new StringBuilder(), object).toString();
-    }
-
-    private static StringBuilder appendJson(StringBuilder messageBuilder, JSONObject object) {
-        if (object.has("text")) {
-            ChatColor color;
-            if (object.has("color")) {
-                color = ChatColor.valueOf(object.getString("color").toUpperCase());
-            } else {
-                color = ChatColor.RESET;
-            }
-            messageBuilder.append(color);
-            if (object.has("text")) {
-                messageBuilder.append(object.getString("text"));
-            }
-        }
-        if (object.has("extra")) {
-            JSONArray array = object.getJSONArray("extra");
-            if (array != null) {
-                for (int i = 0; i < array.length(); i++) {
-                    JSONObject tempObj = array.optJSONObject(i);
-                    if (tempObj == null) {
-                        messageBuilder.append(array.getString(i));
-                    } else {
-                        appendJson(messageBuilder, tempObj);
-                    }
-                }
-            }
-        }
-        return messageBuilder;
+    public void disconnected(final DisconnectedEvent event) {
+        logger.log(Level.INFO, "Disconnected");
     }
 }

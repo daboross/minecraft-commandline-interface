@@ -22,12 +22,10 @@ import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.connect.LoggingClientListener;
 import net.daboross.mccli.log.ChatColor;
-import net.theunnameddude.mcclient.api.MinecraftClient;
-import net.theunnameddude.mcclient.api.MinecraftClientConnector;
-import net.theunnameddude.mcclient.api.auth.AuthenticationResponse;
-import net.theunnameddude.mcclient.api.auth.Authenticator;
-import net.theunnameddude.mcclient.protocol.ver1_6_4.PacketConstructor1_6_4;
-import net.theunnameddude.mcclient.protocol.ver1_7_2.PacketConstructor1_7_2;
+import org.spacehq.mc.auth.exception.AuthenticationException;
+import org.spacehq.mc.protocol.MinecraftProtocol;
+import org.spacehq.packetlib.Client;
+import org.spacehq.packetlib.tcp.TcpSessionFactory;
 
 public class Connect extends Command {
 
@@ -56,26 +54,26 @@ public class Connect extends Command {
             return;
         }
 
-        boolean use1_6_4 = args[1].equals("-6") || (args.length > 2 && args[2].equals("-6"));
         boolean online = args[1].equalsIgnoreCase("-o") || (args.length > 2 && args[2].equalsIgnoreCase("-o"));
-        for (int i = use1_6_4 ? (online ? 3 : 2) : (online ? 2 : 1); i < args.length; i++) {
+        for (int i = (online ? 2 : 1); i < args.length; i++) {
             String username = args[i];
-            AuthenticationResponse auth;
+            MinecraftProtocol protocol;
             if (online) {
                 String password = main.getInput().passwordInput("(pass for " + username + ")# ");
                 try {
-                    auth = Authenticator.sendRequest(username, password);
-                } catch (Exception e) {
+                    protocol = new MinecraftProtocol(username, password, false);
+                } catch (AuthenticationException e) {
                     main.getLogger().log(Level.WARNING, "Authenticator error: {0}", e.toString());
                     continue;
                 }
             } else {
-                auth = Authenticator.offlineMode(username);
+                protocol = new MinecraftProtocol(username);
             }
             sender.sendMessage(ChatColor.GREEN + "Connecting to " + ChatColor.DARK_RED + host + ":" + port + ChatColor.GREEN + " with username " + ChatColor.DARK_RED + username);
-            MinecraftClient client = MinecraftClientConnector.connect(host, port, auth, use1_6_4 ? new PacketConstructor1_6_4() : new PacketConstructor1_7_2());
-            client.addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
+            Client client = new Client(host, port, protocol, new TcpSessionFactory());
+            client.getSession().addListener(new LoggingClientListener(main.getSubLogger(host + ":" + username)));
             main.getClients().addClient(client, username);
+            client.getSession().connect();
         }
     }
 }
