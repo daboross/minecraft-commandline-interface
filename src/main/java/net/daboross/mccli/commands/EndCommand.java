@@ -25,8 +25,8 @@ public class EndCommand extends Command {
     private final MinecraftInterface main;
 
     public EndCommand(MinecraftInterface main) {
-        super("end");
-        setHelpText("Ends the client");
+        super("end", "stop", "exit");
+        setHelpText("Exits the client");
         this.main = main;
     }
 

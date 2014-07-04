@@ -44,6 +44,9 @@ public class LoggingClientListener implements SessionListener {
     private static String parseJsonOpt(String str) {
         if (str.startsWith("{") && str.endsWith("}")) {
             return parseJsonMessage(new JSONObject(str));
+        } else if (str.startsWith("\"") && str.endsWith("\"")) {
+            str = str.substring(1, str.length() - 1).replaceAll("\\\\\"", "\"");
+            return parseJsonMessage(new JSONObject(str));
         } else {
             return str;
         }
@@ -88,8 +91,7 @@ public class LoggingClientListener implements SessionListener {
         if (packet instanceof ServerJoinGamePacket) {
             logger.log(Level.INFO, "Joined game!");
         } else if (packet instanceof ServerChatPacket) {
-            Message message =
-                    event.<ServerChatPacket>getPacket().getMessage();
+            Message message = event.<ServerChatPacket>getPacket().getMessage();
             try {
                 logger.log(Level.INFO, "[Chat] {0}", parseJsonOpt(message.toJsonString()));
             } catch (JSONException ex) {

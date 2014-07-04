@@ -53,8 +53,7 @@ public abstract class Command {
 
     public void sendHelpText(Sender sender) {
         sender.sendMessage(ChatColor.AQUA + ArrayUtils.join(aliases, ChatColor.GRAY + " | " + ChatColor.AQUA)
-                + ((helpArgs == null || helpArgs.length == 0) ? "" : ChatColor.GRAY + " <" + ChatColor.GOLD
-                + ArrayUtils.join(helpArgs, ChatColor.GRAY + "> <" + ChatColor.GOLD) + ChatColor.GRAY + ">")
+                + ((helpArgs == null || helpArgs.length == 0) ? "" : " " + ChatColor.GOLD + ArrayUtils.join(helpArgs, " "))
                 + ChatColor.WHITE + " - " + ChatColor.GREEN + getHelpText());
     }
 

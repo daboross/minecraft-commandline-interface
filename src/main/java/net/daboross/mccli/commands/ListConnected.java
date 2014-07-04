@@ -44,12 +44,12 @@ public class ListConnected extends Command {
         Iterator<Map.Entry<Client, String>> i = main.getClients().getAllClients().iterator();
         if (i.hasNext()) {
             StringBuilder builder = new StringBuilder(ChatColor.GREEN.toString()).append("Connected clients: ").append(ChatColor.DARK_RED).append(i.next().getValue());
-            for (; i.hasNext(); ) {
+            while (i.hasNext()) {
                 builder.append(ChatColor.GREEN).append(", ").append(ChatColor.DARK_RED).append(i.next().getValue());
             }
             sender.sendMessage(builder.toString());
         } else {
-            sender.sendMessage(ChatColor.GREEN + "Connected clients:");
+            sender.sendMessage(ChatColor.GREEN + "No connected clients");
         }
     }
 }

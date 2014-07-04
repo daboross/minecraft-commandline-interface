@@ -29,8 +29,8 @@ public class Disconnect extends Command {
 
     public Disconnect(MinecraftInterface main) {
         super("disconnect");
-        setHelpArgs("Name regex");
-        setHelpText("Disconnects the given client(s). Name regex is a regex that will be matched against 'host:username'");
+        setHelpArgs("NAME_REGEX");
+        setHelpText("Disconnects the given client(s). NAME_REGEX will be matched against `HOST:USERNAME`");
         this.main = main;
     }
 
@@ -40,7 +40,7 @@ public class Disconnect extends Command {
             sendHelpText(sender);
             return;
         }
-        String name = args[0];
+        String name = "(?i)" + args[0];
         for (Map.Entry<Client, String> entry : main.getClients().getClientsWith(name)) {
             sender.sendMessage(ChatColor.GREEN + "Disconnecting " + ChatColor.DARK_RED + entry.getValue());
             final Client client = entry.getKey();

@@ -31,8 +31,8 @@ public class SendText extends Command {
 
     public SendText(MinecraftInterface main) {
         super("send");
-        setHelpArgs("Name regex", "message");
-        setHelpText("Sends a chat message using the specified client(s). Name regex is a regex that will be matched against 'host:username'");
+        setHelpArgs("NAME_REGEX", "MESSAGE");
+        setHelpText("Sends a chat message using the specified client(s). NAME_REGEX will be matched against `HOST:USERNAME`");
         this.main = main;
     }
 
@@ -42,7 +42,7 @@ public class SendText extends Command {
             sendHelpText(sender);
             return;
         }
-        String name = args[0];
+        String name = "(?i)" + args[0]; // ignore case regex
         String message = ArrayUtils.join(args, 1, " ");
         for (Map.Entry<Client, String> client : main.getClients().getClientsWith(name)) {
             sender.sendMessage(ChatColor.GREEN + "Sending message to " + ChatColor.DARK_RED + client.getValue());

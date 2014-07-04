@@ -27,7 +27,7 @@ public class HelpCommand extends Command {
 
     public HelpCommand(CommandHandler commandHandler) {
         super("?", "help");
-        setHelpText("Displays this help");
+        setHelpText("Displays this help page");
         this.commandHandler = commandHandler;
     }
 
