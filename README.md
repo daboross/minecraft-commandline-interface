@@ -1,4 +1,6 @@
-MinecraftTesting
-================
+mc-cli
+======
 
-Minecraft client using TheUnnamedDude's thingeh
+Commandline minecraft client using mcprotocollib.
+
+Download from [http://ci.dabo.guru/p/MinecraftCli](http://ci.dabo.guru/p/MinecraftCli).
