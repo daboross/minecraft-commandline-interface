@@ -40,6 +40,10 @@
             <id>repo-daboross-net</id>
             <url>http://repo.daboross.net/</url>
         </repository>
+        <repository>
+            <id>spacehq-snapshots</id>
+            <url>http://repo.spacehq.org/content/repositories/snapshots/</url>
+        </repository>
     </repositories>
     <dependencies>
         <!--<dependency>
