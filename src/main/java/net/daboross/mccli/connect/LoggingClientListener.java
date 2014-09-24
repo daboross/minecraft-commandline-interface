@@ -46,7 +46,7 @@ public class LoggingClientListener implements SessionListener {
             return parseJsonMessage(new JSONObject(str));
         } else if (str.startsWith("\"") && str.endsWith("\"")) {
             str = str.substring(1, str.length() - 1).replaceAll("\\\\\"", "\"");
-            return parseJsonMessage(new JSONObject(str));
+            return parseJsonOpt(str);
         } else {
             return str;
         }
