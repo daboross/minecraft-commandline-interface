@@ -25,6 +25,7 @@ import org.json.JSONObject;
 import org.spacehq.mc.protocol.data.message.Message;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerChatPacket;
 import org.spacehq.mc.protocol.packet.ingame.server.ServerJoinGamePacket;
+import org.spacehq.mc.protocol.packet.login.server.LoginDisconnectPacket;
 import org.spacehq.packetlib.event.session.ConnectedEvent;
 import org.spacehq.packetlib.event.session.DisconnectedEvent;
 import org.spacehq.packetlib.event.session.DisconnectingEvent;
@@ -97,6 +98,8 @@ public class LoggingClientListener implements SessionListener {
             } catch (JSONException ex) {
                 logger.log(Level.SEVERE, "Failed to get chat text", ex);
             }
+        } else if (packet instanceof LoginDisconnectPacket) {
+            logger.log(Level.INFO, "Disconnected: " + ((LoginDisconnectPacket) packet).getReason());
         }
 //        else if (!(packet instanceof ServerEntityHeadLookPacket || packet instanceof ServerEntityEquipmentPacket
 //                || packet instanceof ServerEntityPropertiesPacket || packet instanceof ServerSpawnMobPacket

@@ -22,7 +22,7 @@ import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.connect.LoggingClientListener;
 import net.daboross.mccli.log.ChatColor;
-import org.spacehq.mc.auth.exception.AuthenticationException;
+import org.spacehq.mc.auth.exception.request.RequestException;
 import org.spacehq.mc.protocol.MinecraftProtocol;
 import org.spacehq.packetlib.Client;
 import org.spacehq.packetlib.tcp.TcpSessionFactory;
@@ -62,7 +62,7 @@ public class Connect extends Command {
                 String password = main.getInput().passwordInput("(pass for " + username + ")# ");
                 try {
                     protocol = new MinecraftProtocol(username, password, false);
-                } catch (AuthenticationException e) {
+                } catch (RequestException e) {
                     main.getLogger().log(Level.WARNING, "Authenticator error: {0}", e.toString());
                     continue;
                 }

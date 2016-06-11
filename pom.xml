@@ -33,12 +33,17 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl3</netbeans.hint.license>
+        <project.frameworkversion>1.9.4-20160525.142803-2</project.frameworkversion>
     </properties>
 
     <repositories>
         <repository>
             <id>repo-daboross-net</id>
             <url>http://repo.daboross.net/</url>
+        </repository>
+        <repository>
+            <id>repo-daboross-net-backup-releases</id>
+            <url>http://repo.daboross.net/releases/</url>
         </repository>
         <repository>
             <id>spacehq-snapshots</id>
@@ -55,7 +60,7 @@
         <dependency>
             <groupId>org.spacehq</groupId>
             <artifactId>mcprotocollib</artifactId>
-            <version>1.8-SNAPSHOT</version>
+            <version>${project.frameworkversion}</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
