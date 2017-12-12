@@ -33,7 +33,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <netbeans.hint.license>gpl3</netbeans.hint.license>
-        <project.frameworkversion>1.9.4-20160525.142803-2</project.frameworkversion>
+        <project.frameworkversion>1.12.1</project.frameworkversion>
     </properties>
 
     <repositories>
@@ -46,8 +46,8 @@
             <url>http://repo.daboross.net/releases/</url>
         </repository>
         <repository>
-            <id>spacehq-snapshots</id>
-            <url>http://repo.spacehq.org/content/repositories/snapshots/</url>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
         </repository>
     </repositories>
     <dependencies>
@@ -58,7 +58,7 @@
             <scope>compile</scope>
         </dependency>-->
         <dependency>
-            <groupId>org.spacehq</groupId>
+            <groupId>com.github.steveice10</groupId>
             <artifactId>mcprotocollib</artifactId>
             <version>${project.frameworkversion}</version>
             <scope>compile</scope>
@@ -78,7 +78,7 @@
         <dependency>
             <groupId>jline</groupId>
             <artifactId>jline</artifactId>
-            <version>2.11</version>
+            <version>2.14.5</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

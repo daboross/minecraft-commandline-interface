@@ -22,10 +22,10 @@ import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.connect.LoggingClientListener;
 import net.daboross.mccli.log.ChatColor;
-import org.spacehq.mc.auth.exception.request.RequestException;
-import org.spacehq.mc.protocol.MinecraftProtocol;
-import org.spacehq.packetlib.Client;
-import org.spacehq.packetlib.tcp.TcpSessionFactory;
+import com.github.steveice10.mc.auth.exception.request.RequestException;
+import com.github.steveice10.mc.protocol.MinecraftProtocol;
+import com.github.steveice10.packetlib.Client;
+import com.github.steveice10.packetlib.tcp.TcpSessionFactory;
 
 public class Connect extends Command {
 

@@ -21,7 +21,7 @@ import net.daboross.mccli.api.MinecraftInterface;
 import net.daboross.mccli.command.Command;
 import net.daboross.mccli.command.Sender;
 import net.daboross.mccli.log.ChatColor;
-import org.spacehq.packetlib.Client;
+import com.github.steveice10.packetlib.Client;
 
 public class Disconnect extends Command {
 
